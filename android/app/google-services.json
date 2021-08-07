@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "567389755666",
+    "project_id": "quickpost-7726d",
+    "storage_bucket": "quickpost-7726d.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:567389755666:android:193288dffb3ec75ab63bcb",
+        "android_client_info": {
+          "package_name": "com.example.post"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "567389755666-td6e9h6odtpeoiigf5in4blincu94n4t.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyD_zc5ciS2-qtZOEy3ZEe5huJ6sysid9do"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "567389755666-td6e9h6odtpeoiigf5in4blincu94n4t.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
