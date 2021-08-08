@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>CLIENT_ID</key>
+	<string>567389755666-ubr4tmm110lnnuj5bde847hnjjaqnjjs.apps.googleusercontent.com</string>
+	<key>REVERSED_CLIENT_ID</key>
+	<string>com.googleusercontent.apps.567389755666-ubr4tmm110lnnuj5bde847hnjjaqnjjs</string>
+	<key>ANDROID_CLIENT_ID</key>
+	<string>567389755666-9ema83vabjrfhunvgdv0c7d5kokvk68p.apps.googleusercontent.com</string>
+	<key>API_KEY</key>
+	<string>AIzaSyDNKsdClG5erTqQ05Z9XMhy0vvFQekYt3A</string>
+	<key>GCM_SENDER_ID</key>
+	<string>567389755666</string>
+	<key>PLIST_VERSION</key>
+	<string>1</string>
+	<key>BUNDLE_ID</key>
+	<string>com.example.quickpost</string>
+	<key>PROJECT_ID</key>
+	<string>quickpost-7726d</string>
+	<key>STORAGE_BUCKET</key>
+	<string>quickpost-7726d.appspot.com</string>
+	<key>IS_ADS_ENABLED</key>
+	<false></false>
+	<key>IS_ANALYTICS_ENABLED</key>
+	<false></false>
+	<key>IS_APPINVITE_ENABLED</key>
+	<true></true>
+	<key>IS_GCM_ENABLED</key>
+	<true></true>
+	<key>IS_SIGNIN_ENABLED</key>
+	<true></true>
+	<key>GOOGLE_APP_ID</key>
+	<string>1:567389755666:ios:d5d48376128dfe54b63bcb</string>
+	<key>DATABASE_URL</key>
+	<string>https://quickpost-7726d-default-rtdb.firebaseio.com</string>
+</dict>
+</plist>
