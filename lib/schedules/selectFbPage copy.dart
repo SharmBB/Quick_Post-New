@@ -1,12 +1,28 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_signin_button/button_builder.dart';
 import 'package:post/utils/constants.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter_facebook_login/flutter_facebook_login.dart';
+import 'package:http/http.dart' as http;
 
 class Fbpage extends StatefulWidget {
   const Fbpage({Key? key}) : super(key: key);
 
   @override
   _upcomingState createState() => _upcomingState();
+}
+
+final fbLogin = FacebookLogin();
+Future signInFB() async {
+  final FacebookLoginResult result = await fbLogin.logIn(["email"]);
+  final String token = result.accessToken.token;
+  final response = await http.get(Uri.parse(
+      'https://graph.facebook.com/v2.12/me?fields=name,first_name,last_name,email&access_token=${token}'));
+  final profile = jsonDecode(response.body);
+  print(profile);
+  return profile;
 }
 
 class _upcomingState extends State<Fbpage> {
