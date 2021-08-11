@@ -20,13 +20,13 @@ class _upcomingState extends State<Fbpage> {
   Widget build(BuildContext context) {
     CollectionReference users = FirebaseFirestore.instance.collection('users');
 
-    Future<void> addUser(firstName, email, shortToken, longToken) {
+    Future<void> addUser(firstName, lastName, email, accountId) {
       return users
           .add({
-            'first_name': firstName,
+            'firstName': firstName,
             'email': email,
-            'short_token': shortToken,
-            'long_token': longToken,
+            'lastName': lastName,
+            'accountId': accountId,
             'boolean': "1"
           })
           .then((value) => print("User Added"))
@@ -40,7 +40,9 @@ class _upcomingState extends State<Fbpage> {
       final response = await http.get(Uri.parse(
           'https://graph.facebook.com/v2.12/me?fields=name,first_name,last_name,email&access_token=${token}'));
       final profile = jsonDecode(response.body);
-      print(profile);
+      print(profile['first_name']);
+      addUser(profile['first_name'], profile['last_name'], profile['email'],
+          profile['id']);
       return profile;
     }
 

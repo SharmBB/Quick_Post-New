@@ -70,8 +70,8 @@ class _AddUserState extends State<AddUser> {
                         print(data);
                       },
                       child: new ListTile(
-                        title: new Text(data['full_name']),
-                        subtitle: new Text(data['company']),
+                        title: new Text(data['firstName']),
+                        subtitle: new Text(data['lastName']),
                       ),
                     );
                   }).toList(),
