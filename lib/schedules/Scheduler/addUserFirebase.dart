@@ -24,9 +24,10 @@ class _AddUserState extends State<AddUser> {
     Future<void> addUser() {
       return users
           .add({
-            'full_name': "sharmi",
-            'company': "m4c",
-            'age': 21,
+            'first_name': "sharmi",
+            'email': "m4c",
+            'short_token': 21,
+            'long_token': "token",
             'boolean': "1"
           })
           .then((value) => print("User Added"))

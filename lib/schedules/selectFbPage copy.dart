@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_signin_button/button_builder.dart';
 import 'package:post/utils/constants.dart';
@@ -14,20 +15,35 @@ class Fbpage extends StatefulWidget {
   _upcomingState createState() => _upcomingState();
 }
 
-final fbLogin = FacebookLogin();
-Future signInFB() async {
-  final FacebookLoginResult result = await fbLogin.logIn(["email"]);
-  final String token = result.accessToken.token;
-  final response = await http.get(Uri.parse(
-      'https://graph.facebook.com/v2.12/me?fields=name,first_name,last_name,email&access_token=${token}'));
-  final profile = jsonDecode(response.body);
-  print(profile);
-  return profile;
-}
-
 class _upcomingState extends State<Fbpage> {
   @override
   Widget build(BuildContext context) {
+    CollectionReference users = FirebaseFirestore.instance.collection('users');
+
+    Future<void> addUser(firstName, email, shortToken, longToken) {
+      return users
+          .add({
+            'first_name': firstName,
+            'email': email,
+            'short_token': shortToken,
+            'long_token': longToken,
+            'boolean': "1"
+          })
+          .then((value) => print("User Added"))
+          .catchError((error) => print("Failed to add user: $error"));
+    }
+
+    final fbLogin = FacebookLogin();
+    Future signInFB() async {
+      final FacebookLoginResult result = await fbLogin.logIn(["email"]);
+      final String token = result.accessToken.token;
+      final response = await http.get(Uri.parse(
+          'https://graph.facebook.com/v2.12/me?fields=name,first_name,last_name,email&access_token=${token}'));
+      final profile = jsonDecode(response.body);
+      print(profile);
+      return profile;
+    }
+
     return Scaffold(
       appBar: AppBar(
         centerTitle: true,
@@ -50,7 +66,8 @@ class _upcomingState extends State<Fbpage> {
                 // width: 180,
                 height: 40.0,
                 onPressed: () {
-                  print("object");
+                  signInFB();
+                  //print("object");
                 },
                 backgroundColor: Colors.blue[700]!,
               ),
