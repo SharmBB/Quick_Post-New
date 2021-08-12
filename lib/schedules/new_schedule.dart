@@ -3,6 +3,7 @@ import 'dart:io';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/rendering.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 
 import 'package:image_picker/image_picker.dart';
 import 'package:multi_image_picker2/multi_image_picker2.dart';
@@ -27,11 +28,18 @@ import 'package:path/path.dart' as Path;
 //'EAAFkm83HxkoBALFCK9DZBpXwpqxk6l9nMAUXYw7o0DlpCDNfGxodAzVEIl4t4WZAButavVKxafFmnplq3SOx1pf0pZCRrgQpwzcMxXzWHuiJbMjq9FV4lasT2ZAAVtz0N7rX93902rFWj5kntCjrIuhAmhz1JQKsJmks8QOguRF7d1sZCa3OQeDMHZCK2y9ZCGrqrg9PUllJHWVWjZADZCYfI';
 
 class NewSchedule extends StatefulWidget {
-   NewSchedule({Key? key, required this.title,required this.date,required this.date2,required this.time, }) : super(key: key);
+  NewSchedule({
+    Key? key,
+    required this.title,
+    required this.date,
+    required this.date2,
+    required this.time,
+  }) : super(key: key);
 
-  
   final String title;
-  final String date;final String date2;final String time;
+  final String date;
+  final String date2;
+  final String time;
 
   @override
   _NewScheduleState createState() => _NewScheduleState();
@@ -39,8 +47,6 @@ class NewSchedule extends StatefulWidget {
 
 class _NewScheduleState extends State<NewSchedule> {
   final myTextController = TextEditingController();
-
-
 
   bool isSwitched = false;
   bool isSwitchedfb = false;
@@ -59,6 +65,21 @@ class _NewScheduleState extends State<NewSchedule> {
 
   File? _image;
   String? _uploadedFileURL;
+  
+   final List<Map<String, dynamic>> _allUsers = [
+    {"id": 1, "name": "Andy", "age": 29},
+    {"id": 2, "name": "Aragon", "age": 40},
+    {"id": 3, "name": "Bob", "age": 5},
+    {"id": 4, "name": "Barbara", "age": 35},
+    {"id": 5, "name": "Candy", "age": 21},
+    {"id": 6, "name": "Colin", "age": 55},
+    {"id": 7, "name": "Audra", "age": 30},
+    {"id": 8, "name": "Banana", "age": 14},
+    {"id": 9, "name": "Caversky", "age": 100},
+    {"id": 10, "name": "Becky", "age": 32},
+  ];
+
+  
 
   // _imgFromCamera() async {
   //   PickedFile? image = await ImagePicker()
@@ -115,7 +136,6 @@ class _NewScheduleState extends State<NewSchedule> {
         builder: (BuildContext bc) {
           return SafeArea(
             child: Container(
-              
               margin: EdgeInsets.symmetric(horizontal: 10),
               child: new Wrap(
                 children: <Widget>[
@@ -153,6 +173,7 @@ class _NewScheduleState extends State<NewSchedule> {
           );
         });
   }
+  
 
 // multi image picker
   List<Asset> images = [];
@@ -220,6 +241,8 @@ class _NewScheduleState extends State<NewSchedule> {
     );
   }
 
+  
+
   Future<void> loadAssets() async {
     List<Asset> resultList = [];
     String error = 'No Error Dectected';
@@ -249,6 +272,9 @@ class _NewScheduleState extends State<NewSchedule> {
       _error = error;
     });
   }
+
+  
+
 
   @override
   Widget build(BuildContext context) {
@@ -285,20 +311,17 @@ class _NewScheduleState extends State<NewSchedule> {
                 //             },
                 //           ),
                 //         );
-    
+
                 var route = new MaterialPageRoute(
-                  builder: (BuildContext context) =>
-                      new Upcoming(
-                        postdate: "${widget.date2}",
-                        posttime: "${widget.time}",
-                        postimage: _image.toString(),
-                        
-                        title: myTextController.text,),
+                  builder: (BuildContext context) => new Upcoming(
+                    postdate: "${widget.date2}",
+                    posttime: "${widget.time}",
+                    postimage: _image.toString(),
+                    title: myTextController.text,
+                  ),
                 );
                 Navigator.of(context).push(route);
-                    
-                    },
-              
+              },
               child: Text(
                 "Post",
                 style: TextStyle(color: Colors.blue, fontSize: 18),
@@ -358,11 +381,11 @@ class _NewScheduleState extends State<NewSchedule> {
               height: 10,
             ),
             Container(
-         //     padding: EdgeInsets.symmetric(
-         //       horizontal: size.width * (1 / 20),
-        //      ),
+              //     padding: EdgeInsets.symmetric(
+              //       horizontal: size.width * (1 / 20),
+              //      ),
               child: Column(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Padding(
                     padding: const EdgeInsets.only(
@@ -384,24 +407,115 @@ class _NewScheduleState extends State<NewSchedule> {
                     },
                   ),
                   ListTile(
-                    title: new Text('Add Location'),
+                    title: new Text('Select Page'),
                     trailing: new Icon(Icons.keyboard_arrow_right),
                     onTap: () {
-                      print("Add Location Clicked......!");
+                      showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return StatefulBuilder(
+            builder: (context, setState2) {
+              return AlertDialog(
+                title: Center(child: Text('Available Pages', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, fontFamily: "Poppins"),)),
+                actions: <Widget>[
+                    Padding(
+                      padding: const EdgeInsets.only(bottom: 10),
+                      child: Container(
+                      width: 100,
+                      height: 30,
+                      margin: EdgeInsets.symmetric(horizontal: 15),
+                      decoration: new BoxDecoration(
+                        borderRadius: BorderRadius.circular(35.0),
+                        gradient: new LinearGradient(
+                          begin: Alignment.topLeft,
+                          end: Alignment.bottomRight,
+                    
+                           colors: [
+                                          Color(0xFFFFE0B2),
+                                          Color(0xFFFFB74D),
+                                          Color(0xFFE040FB),
+                                          Color(0xFFBA68C8),
+                                          Color(0xFF7E57C2),
+                                        ],
+                          
+                        ),
+                      ),
+                      child: new FlatButton(
+                        // color: Colors.orange[600],
+                        onPressed: (){
+                        
+                          
+                        },
+                        child: const Text("Ok", style: TextStyle(color: Colors.white),)
+                      ),
+                  ),
+                    ),
+
+                  // FlatButton(
+                  //   onPressed: () {
+                  //     Navigator.pop(context, null);
+                  //   },
+                  //   child: Text('CANCEL'),
+                  // ),
+                  // FlatButton(
+                  //   onPressed: () {
+                  //     Navigator.pop(context, ringTone[_currentIndex]);
+                  //   },
+                  //   child: Text('OK'),
+                  // ),
+                ],
+                content: Container(
+                  width: size.width * (18 / 20),
+                  height: 280,
+                  child: ListView.builder(
+                    shrinkWrap: true,
+                    itemCount: _allUsers.length,
+                    itemBuilder: (BuildContext context, int index) {
+                      return RadioListTile(
+                        value: index,
+                        groupValue: _currentIndex,
+                        selected: true,
+                        title: Text(_allUsers[index]["name"].toString()),
+                     
+                        onChanged: (val) {
+                          // setState2(() {
+                          //   _currentIndex = val;
+                          //   final pageShortToken = page['data'][_currentIndex]['access_token'];
+                          //   final pageId = page['data'][_currentIndex]['id'];
+                          //   print(page['data'][_currentIndex]['name']);
+                          //   prefs.setString('pageId', pageId);
+                          //   prefs.setString('pageToken', pageShortToken);
+                            print(_currentIndex);
+                          //}
+                          ;
+                        },
+                      );
                     },
+                  ),
+                ),
+              );
+            },
+          );
+        });
+  }
+
+                     
+                                  
+                 
+                    
                   ),
                   //SwitchScheduled(),
                   ListTile(
-                    title:  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: <Widget>[
-                      new Text('Scheduled at'),
-                     
-                      Text("${widget.date}",style: TextStyle(color: Colors.grey,fontSize: 14),),
-                    ]),
-                    trailing:
-
-                      CupertinoSwitch(
+                    title: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: <Widget>[
+                          new Text('Scheduled at'),
+                          Text(
+                            "${widget.date}",
+                            style: TextStyle(color: Colors.grey, fontSize: 14),
+                          ),
+                        ]),
+                    trailing: CupertinoSwitch(
                       value: isSwitched,
                       onChanged: (value) {
                         setState(() {
@@ -409,88 +523,83 @@ class _NewScheduleState extends State<NewSchedule> {
                           print(isSwitched);
                           if (value == true) {
                             //_awaitReturnValueFromSecondScreen(context);
-                               Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                        builder: (context) => Calendar()),
-                                  );
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => Calendar()),
+                            );
                           }
                         });
-                        
                       },
                       activeColor: Colors.blue,
-                       
                     ),
-                    
-                  
                   ),
-                    
-           
+
                   // SwitchFacebook(),
                   // SwitchTwitter(),
                   // SwitchTumblr(),
                   SizedBox(height: 2),
-                  ListTile(
-                    title: new Text('Facebook'),
-                    trailing: CupertinoSwitch(
-                      value: isSwitchedfb,
-                      onChanged: (value) {
-                        setState(() {
-                          isSwitchedfb = value;
-                          print(isSwitchedfb);
-                          if (value == true) {
-                            //_awaitReturnValueFromSecondScreen(context);
-                          }
-                        });
-                      },
-                      activeColor: Colors.blue,
-                    ),
-                  ),
-                  SizedBox(height: 2),
-                  ListTile(
-                    title: new Text('Twitter'),
-                    trailing: CupertinoSwitch(
-                      value: isSwitchedtwitter,
-                      onChanged: (value) {
-                        setState(() {
-                          isSwitchedtwitter = value;
-                          print(isSwitchedtwitter);
-                          if (value == true) {
-                            //_awaitReturnValueFromSecondScreen(context);
-                          }
-                        });
-                      },
-                      activeColor: Colors.blue,
-                    ),
-                  ),
+                  // ListTile(
+                  //   title: new Text('Facebook'),
+                  //   trailing: CupertinoSwitch(
+                  //     value: isSwitchedfb,
+                  //     onChanged: (value) {
+                  //       setState(() {
+                  //         isSwitchedfb = value;
+                  //         print(isSwitchedfb);
+                  //         if (value == true) {
+                  //           //_awaitReturnValueFromSecondScreen(context);
+                  //         }
+                  //       });
+                  //     },
+                  //     activeColor: Colors.blue,
+                  //   ),
+                  // ),
+                  // SizedBox(height: 2),
+                  // ListTile(
+                  //   title: new Text('Twitter'),
+                  //   trailing: CupertinoSwitch(
+                  //     value: isSwitchedtwitter,
+                  //     onChanged: (value) {
+                  //       setState(() {
+                  //         isSwitchedtwitter = value;
+                  //         print(isSwitchedtwitter);
+                  //         if (value == true) {
+                  //           //_awaitReturnValueFromSecondScreen(context);
+                  //         }
+                  //       });
+                  //     },
+                  //     activeColor: Colors.blue,
+                  //   ),
+                  // ),
                   SizedBox(height: 5.0),
-                  Padding(
-                    padding: EdgeInsets.symmetric(
-                      horizontal: size.width * (1 / 20),
-                    ),
-                    child: GestureDetector(
-                      onTap: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) {
-                              return PaymentPlan();
-                            },
-                          ),
-                        );
-                      },
-                      child: Row(
-                        children: [
-                          Text("Advanced Setting",
-                              style: TextStyle(
-                                fontSize: 12,
-                                color: Colors.grey,
-                              )),
-                          Icon(Icons.keyboard_arrow_right),
-                        ],
-                      ),
-                    ),
-                  ),
+                  // Padding(
+                  //   padding: EdgeInsets.symmetric(
+                  //     horizontal: size.width * (1 / 20),
+                  //   ),
+                  //   child: GestureDetector(
+                  //     onTap: () {
+                  //       Navigator.push(
+                  //         context,
+                  //         MaterialPageRoute(
+                  //           builder: (context) {
+                  //             return PaymentPlan();
+                  //           },
+                  //         ),
+                  //       );
+                  //     },
+                  //     child: Row(
+                  //       children: [
+                  //         Text("Advanced Setting",
+                  //             style: TextStyle(
+                  //               fontSize: 12,
+                  //               color: Colors.grey,
+                  //             )),
+                  //         Icon(Icons.keyboard_arrow_right),
+                  //       ],
+                  //     ),
+                  //   ),
+                  // ),
                   // ListTile(
                   //   title: new Text('Select Page'),
                   //   trailing: new Icon(Icons.keyboard_arrow_right),
@@ -529,4 +638,12 @@ class _NewScheduleState extends State<NewSchedule> {
 //     properties.add(DiagnosticsProperty<File>('_image', _image));
 //   }
 // }
+
 }
+
+
+
+
+
+
+
