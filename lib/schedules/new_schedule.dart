@@ -53,7 +53,7 @@ class _NewScheduleState extends State<NewSchedule> {
   bool isSwitchedtwitter = false;
   String text = "";
   String description = "";
-  int _currentIndex = 0;
+  var _currentIndex = 1;
 
   @override
   void dispose() {
@@ -65,8 +65,8 @@ class _NewScheduleState extends State<NewSchedule> {
 
   File? _image;
   String? _uploadedFileURL;
-  
-   final List<Map<String, dynamic>> _allUsers = [
+
+  final List<Map<String, dynamic>> _allUsers = [
     {"id": 1, "name": "Andy", "age": 29},
     {"id": 2, "name": "Aragon", "age": 40},
     {"id": 3, "name": "Bob", "age": 5},
@@ -78,8 +78,6 @@ class _NewScheduleState extends State<NewSchedule> {
     {"id": 9, "name": "Caversky", "age": 100},
     {"id": 10, "name": "Becky", "age": 32},
   ];
-
-  
 
   // _imgFromCamera() async {
   //   PickedFile? image = await ImagePicker()
@@ -173,7 +171,6 @@ class _NewScheduleState extends State<NewSchedule> {
           );
         });
   }
-  
 
 // multi image picker
   List<Asset> images = [];
@@ -241,8 +238,6 @@ class _NewScheduleState extends State<NewSchedule> {
     );
   }
 
-  
-
   Future<void> loadAssets() async {
     List<Asset> resultList = [];
     String error = 'No Error Dectected';
@@ -272,9 +267,6 @@ class _NewScheduleState extends State<NewSchedule> {
       _error = error;
     });
   }
-
-  
-
 
   @override
   Widget build(BuildContext context) {
@@ -407,103 +399,109 @@ class _NewScheduleState extends State<NewSchedule> {
                     },
                   ),
                   ListTile(
-                    title: new Text('Select Page'),
-                    trailing: new Icon(Icons.keyboard_arrow_right),
-                    onTap: () {
-                      showDialog(
-        context: context,
-        builder: (BuildContext context) {
-          return StatefulBuilder(
-            builder: (context, setState2) {
-              return AlertDialog(
-                title: Center(child: Text('Available Pages', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, fontFamily: "Poppins"),)),
-                actions: <Widget>[
-                    Padding(
-                      padding: const EdgeInsets.only(bottom: 10),
-                      child: Container(
-                      width: 100,
-                      height: 30,
-                      margin: EdgeInsets.symmetric(horizontal: 15),
-                      decoration: new BoxDecoration(
-                        borderRadius: BorderRadius.circular(35.0),
-                        gradient: new LinearGradient(
-                          begin: Alignment.topLeft,
-                          end: Alignment.bottomRight,
-                    
-                           colors: [
-                                          Color(0xFFFFE0B2),
-                                          Color(0xFFFFB74D),
-                                          Color(0xFFE040FB),
-                                          Color(0xFFBA68C8),
-                                          Color(0xFF7E57C2),
-                                        ],
-                          
-                        ),
-                      ),
-                      child: new FlatButton(
-                        // color: Colors.orange[600],
-                        onPressed: (){
-                        
-                          
-                        },
-                        child: const Text("Ok", style: TextStyle(color: Colors.white),)
-                      ),
-                  ),
-                    ),
+                      title: new Text('Select Page'),
+                      trailing: new Icon(Icons.keyboard_arrow_right),
+                      onTap: () {
+                        showDialog(
+                            context: context,
+                            builder: (BuildContext context) {
+                              return StatefulBuilder(
+                                builder: (context, setState) {
+                                  return AlertDialog(
+                                    title: Center(
+                                        child: Text(
+                                      'Available Pages',
+                                      style: TextStyle(
+                                          fontSize: 18,
+                                          fontWeight: FontWeight.bold,
+                                          fontFamily: "Poppins"),
+                                    )),
+                                    actions: <Widget>[
+                                      Padding(
+                                        padding:
+                                            const EdgeInsets.only(bottom: 10),
+                                        child: Container(
+                                          width: 100,
+                                          height: 30,
+                                          margin: EdgeInsets.symmetric(
+                                              horizontal: 15),
+                                          decoration: new BoxDecoration(
+                                            borderRadius:
+                                                BorderRadius.circular(35.0),
+                                            gradient: new LinearGradient(
+                                              begin: Alignment.topLeft,
+                                              end: Alignment.bottomRight,
+                                              colors: [
+                                                Color(0xFFFFE0B2),
+                                                Color(0xFFFFB74D),
+                                                Color(0xFFE040FB),
+                                                Color(0xFFBA68C8),
+                                                Color(0xFF7E57C2),
+                                              ],
+                                            ),
+                                          ),
+                                          child: new FlatButton(
+                                              // color: Colors.orange[600],
+                                              onPressed: () {
+                                                Navigator.of(context).pop(true);
+                                                print("exit");
+                                              },
+                                              child: const Text(
+                                                "Ok",
+                                                style: TextStyle(
+                                                    color: Colors.white),
+                                              )),
+                                        ),
+                                      ),
 
-                  // FlatButton(
-                  //   onPressed: () {
-                  //     Navigator.pop(context, null);
-                  //   },
-                  //   child: Text('CANCEL'),
-                  // ),
-                  // FlatButton(
-                  //   onPressed: () {
-                  //     Navigator.pop(context, ringTone[_currentIndex]);
-                  //   },
-                  //   child: Text('OK'),
-                  // ),
-                ],
-                content: Container(
-                  width: size.width * (18 / 20),
-                  height: 280,
-                  child: ListView.builder(
-                    shrinkWrap: true,
-                    itemCount: _allUsers.length,
-                    itemBuilder: (BuildContext context, int index) {
-                      return RadioListTile(
-                        value: index,
-                        groupValue: _currentIndex,
-                        selected: true,
-                        title: Text(_allUsers[index]["name"].toString()),
-                     
-                        onChanged: (val) {
-                          // setState2(() {
-                          //   _currentIndex = val;
-                          //   final pageShortToken = page['data'][_currentIndex]['access_token'];
-                          //   final pageId = page['data'][_currentIndex]['id'];
-                          //   print(page['data'][_currentIndex]['name']);
-                          //   prefs.setString('pageId', pageId);
-                          //   prefs.setString('pageToken', pageShortToken);
-                            print(_currentIndex);
-                          //}
-                          ;
-                        },
-                      );
-                    },
-                  ),
-                ),
-              );
-            },
-          );
-        });
-  }
-
-                     
-                                  
-                 
-                    
-                  ),
+                                      // FlatButton(
+                                      //   onPressed: () {
+                                      //     Navigator.pop(context, null);
+                                      //   },
+                                      //   child: Text('CANCEL'),
+                                      // ),
+                                      // FlatButton(
+                                      //   onPressed: () {
+                                      //     Navigator.pop(context, ringTone[_currentIndex]);
+                                      //   },
+                                      //   child: Text('OK'),
+                                      // ),
+                                    ],
+                                    content: Container(
+                                      width: size.width * (18 / 20),
+                                      height: 280,
+                                      child: ListView.builder(
+                                        shrinkWrap: true,
+                                        itemCount: _allUsers.length,
+                                        itemBuilder:
+                                            (BuildContext context, int index) {
+                                          return RadioListTile(
+                                            value: index,
+                                            groupValue: _currentIndex,
+                                            selected: true,
+                                            title: Text(_allUsers[index]["name"]
+                                                .toString()),
+                                            onChanged: (val) {
+                                              setState(() {
+                                                _currentIndex = index;
+                                                //   final pageShortToken = page['data'][_currentIndex]['access_token'];
+                                                //   final pageId = page['data'][_currentIndex]['id'];
+                                                //   print(page['data'][_currentIndex]['name']);
+                                                //   prefs.setString('pageId', pageId);
+                                                //   prefs.setString('pageToken', pageShortToken);
+                                                print(_allUsers[index]["id"]);
+                                                print(val);
+                                              });
+                                            },
+                                          );
+                                        },
+                                      ),
+                                    ),
+                                  );
+                                },
+                              );
+                            });
+                      }),
                   //SwitchScheduled(),
                   ListTile(
                     title: Row(
@@ -640,10 +638,3 @@ class _NewScheduleState extends State<NewSchedule> {
 // }
 
 }
-
-
-
-
-
-
-
