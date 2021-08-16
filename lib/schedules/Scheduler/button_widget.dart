@@ -9,15 +9,12 @@ class ButtonWidget extends StatelessWidget {
   }) : super(key: key);
 
   @override
-  Widget build(BuildContext context) => OutlineButton(
+  Widget build(BuildContext context) => TextButton(
         child: Text(
           'Select Time',
           style: TextStyle(fontSize: 20, color: Colors.grey),
         ),
-        borderSide: BorderSide(
-          width: 1,
-          color: Colors.white,
-        ),
+       
         onPressed: onClicked,
       );
 }

@@ -44,8 +44,9 @@ class _SignUpState extends State<SignUp_body> {
 
     if (form!.validate()) {
       form.save();
+      _register();
 
-      performLogin();
+      // performLogin();
     }
   }
 
@@ -169,7 +170,7 @@ class _SignUpState extends State<SignUp_body> {
                                     FlatButton(
                                       onPressed: () async {
                                         _submit();
-                                        _register();
+                                        // _register();
                                       },
                                       textColor: Colors.white,
                                       padding: const EdgeInsets.all(0.0),
@@ -241,29 +242,6 @@ class _SignUpState extends State<SignUp_body> {
                     SizedBox(
                       height: 40,
                     ),
-                    Align(
-                      alignment: Alignment.center,
-                      child: SizedBox(
-                        width: 120.0,
-                        height: 40.0,
-                        child: ElevatedButton(
-                            child: SvgPicture.asset(
-                              "assets/instagram.svg",
-                              width: 100,
-                              height: 30,
-                              fit: BoxFit.cover,
-                            ),
-                            style: ButtonStyle(
-                              backgroundColor: MaterialStateProperty.all<Color>(
-                                Color(0xFFE0E0E0),
-                              ),
-                            ),
-                            onPressed: () => print("photo")),
-                      ),
-                    ),
-                    SizedBox(
-                      height: 40,
-                    ),
                     Container(
                       alignment: Alignment.topCenter,
                       child: Row(
@@ -316,7 +294,7 @@ class _SignUpState extends State<SignUp_body> {
       keyboardType: TextInputType.emailAddress,
       validator: (value) {
         if (value!.length == 0) {
-          return 'Email required';
+          return 'Email Required';
         } else if (!regex.hasMatch(value)) {
           return 'Enter Valid Email';
         } else {
@@ -339,7 +317,7 @@ class _SignUpState extends State<SignUp_body> {
         RegExp regex = new RegExp(
             r'^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[!@#\$&*~]).{8,}$');
         if (value!.length == 0) {
-          return 'Password required';
+          return 'Password Required';
         } else if (!regex.hasMatch(value)) {
           return 'Password Must contains \n - Minimum 1 Upper case \n - Minimum 1 lowercase \n - Minimum 1 Number \n - Minimum 1 Special Character \n - Minimum 8 letters';
         }
@@ -394,7 +372,7 @@ class _SignUpState extends State<SignUp_body> {
           .user;
       setState(() {
         if (user != null) {
-          Fluttertoast.showToast(msg: "user created");
+          Fluttertoast.showToast(msg: "User Created Sucessfully");
           Navigator.pushReplacement(
             context,
             MaterialPageRoute(builder: (context) => Signin()),
