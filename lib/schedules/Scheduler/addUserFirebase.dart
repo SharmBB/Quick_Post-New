@@ -24,11 +24,12 @@ class _AddUserState extends State<AddUser> {
     Future<void> addUser() {
       return users
           .add({
-            'first_name': "sharmi",
-            'email': "m4c",
-            'short_token': 21,
-            'long_token': "token",
-            'boolean': "1"
+            'accountId': "863939667880707",
+            'firstName': "Jathu",
+            'lastName': "jathu",
+            'email': "jathu@gmail.com",
+            'boolean': "1",
+            'tick': true
           })
           .then((value) => print("User Added"))
           .catchError((error) => print("Failed to add user: $error"));

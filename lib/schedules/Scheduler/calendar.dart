@@ -160,7 +160,7 @@ class _CalendarState extends State<Calendar> {
               padding: const EdgeInsets.all(30.0),
               child: TableCalendar(
                 focusedDay: selectedDay,
-                firstDay: DateTime(1990),
+                firstDay: DateTime.now(),
                 lastDay: DateTime(2050),
                 calendarFormat: format,
                 onFormatChanged: (CalendarFormat _format) {

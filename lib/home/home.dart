@@ -4,6 +4,7 @@ import 'package:post/schedules/new_schedule.dart';
 import 'package:post/schedules/past_schedule.dart';
 import 'package:post/schedules/paymentPlan.dart';
 import 'package:post/schedules/selectFbPage%20copy.dart';
+import 'package:post/schedules/selectFbPage.dart';
 import 'package:post/schedules/upcoming_schedule.dart';
 
 class Home extends StatefulWidget {
@@ -15,7 +16,7 @@ class _HomeState extends State<Home> {
   int currentTab = 3; // to keep track of active tab index
   final List<Widget> screens = [
     PaymentPlan(),
-    Fbpage(),
+    SelectFbPage(),
     PastShedule(),
     Upcoming(
       postdate: '',
@@ -133,7 +134,7 @@ class _HomeState extends State<Home> {
                   onPressed: () {
                     setState(() {
                       currentScreen =
-                          Fbpage(); // if user taps on this dashboard tab will be active
+                          SelectFbPage(); // if user taps on this dashboard tab will be active
                       currentTab = 2;
                     });
                   },

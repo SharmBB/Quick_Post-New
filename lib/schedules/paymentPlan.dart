@@ -196,7 +196,7 @@ class PaymentPlanState extends State<PaymentPlan> {
                           onPressed: () {},
                           child: Text(
                             'Continue to payment ',
-                            style: TextStyle(color: Colors.white, fontSize: 20),
+                            style: TextStyle(color: Colors.white, fontSize: 16),
                           ),
                         )),
                   ),
