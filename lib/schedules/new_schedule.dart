@@ -7,6 +7,7 @@ import 'package:fluttertoast/fluttertoast.dart';
 
 import 'package:image_picker/image_picker.dart';
 import 'package:multi_image_picker2/multi_image_picker2.dart';
+import 'package:post/home/home.dart';
 
 import 'package:post/schedules/scheduler/calendar.dart';
 import 'package:post/schedules/paymentPlan.dart';
@@ -155,7 +156,7 @@ class _NewScheduleState extends State<NewSchedule> {
                   Divider(),
                   new ListTile(
                     shape: Border.all(
-                        color: Colors.red, width: 10, style: BorderStyle.solid),
+                        color: Colors.grey, width: 10, style: BorderStyle.solid),
                     title: new Text(
                       'Cancel',
                       style: TextStyle(fontWeight: FontWeight.bold),
@@ -276,7 +277,14 @@ class _NewScheduleState extends State<NewSchedule> {
       appBar: AppBar(
         leading: IconButton(
           icon: Icon(Icons.close, color: Colors.black),
-          onPressed: () => Navigator.of(context).pop(),
+          onPressed: () =>    Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) {
+                              return Home();
+                            },
+                          ),
+          )
         ),
         centerTitle: true,
         title: Text(

@@ -37,13 +37,13 @@ class Utils {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
              CupertinoActionSheetAction(
-                    child: const Text('Cancel',style: TextStyle(fontSize: 18,color: Colors.grey),),
+                    child: const Text('Cancel',style: TextStyle(fontSize: 18,color: Colors.black),),
                     onPressed: () {
                       Navigator.pop(context);
                     },
                   ),
                   CupertinoActionSheetAction(
-                    child: const Text('Done',style: TextStyle(fontSize: 18,color: Colors.grey),),
+                    child: const Text('Done',style: TextStyle(fontSize: 18,color: Colors.black),),
                      onPressed: onClicked,
                      
                      

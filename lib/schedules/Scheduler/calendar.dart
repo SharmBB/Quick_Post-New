@@ -37,7 +37,7 @@ class _CalendarState extends State<Calendar> {
 
   DateTime dateTime = DateTime.now();
   String? time;
-  String? _viewtime = "no chosen time", _viewdate, _viewdate2;
+  String? _viewtime = "", _viewdate, _viewdate2;
 
   void _timeView() {
     setState(
@@ -124,7 +124,7 @@ class _CalendarState extends State<Calendar> {
         title: Text(
           'Calendar',
           style: TextStyle(
-              color: Colors.grey, fontSize: 20.0, fontWeight: FontWeight.bold),
+              color: Colors.black, fontSize: 20.0, fontWeight: FontWeight.bold),
         ),
         actions: [
           Padding(

@@ -55,7 +55,7 @@ class _AddUserState extends State<AddUser> {
                 }
 
                 if (snapshot.connectionState == ConnectionState.waiting) {
-                  return Center(child: Text("Loading"));
+                  return Center(child: CircularProgressIndicator());
                 }
 
                 return new ListView(
