@@ -18,9 +18,9 @@ class Fbpage extends StatefulWidget {
 class _upcomingState extends State<Fbpage> {
   @override
   Widget build(BuildContext context) {
-    CollectionReference users = FirebaseFirestore.instance.collection('users');
-
+    
     Future<void> addUser(firstName, lastName, email, accountId) {
+      CollectionReference users = FirebaseFirestore.instance.collection('usersProfile');
       return users
           .add({
             'firstName': firstName,
@@ -50,7 +50,7 @@ class _upcomingState extends State<Fbpage> {
       appBar: AppBar(
         centerTitle: true,
         title: Text(
-          'Profile',
+          'Profile old',
           style: TextStyle(color: kPrimaryDarkColor),
         ),
         backgroundColor: Colors.transparent,

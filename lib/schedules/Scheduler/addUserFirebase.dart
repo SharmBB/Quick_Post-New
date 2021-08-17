@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
@@ -19,16 +20,16 @@ class _AddUserState extends State<AddUser> {
     String? company;
     int? age;
     String documentId = "O5bo8kardCBMtF9LbZoa";
-    CollectionReference users = FirebaseFirestore.instance.collection('users');
-
+    
+    User? user = FirebaseAuth.instance.currentUser;
     Future<void> addUser() {
+      CollectionReference users = FirebaseFirestore.instance.collection('usersProfile');
       return users
           .add({
-            'accountId': "863939667880707",
-            'firstName': "Jathu",
-            'lastName': "jathu",
-            'email': "jathu@gmail.com",
-            'boolean': "1",
+            'accountId': user!.uid,
+            'profileName': "shan 1",
+            'email': user.email,
+            'emailVerified': user.emailVerified,
             'tick': true
           })
           .then((value) => print("User Added"))

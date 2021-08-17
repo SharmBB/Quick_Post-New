@@ -9,6 +9,7 @@ import 'package:post/schedules/paymentPlan.dart';
 import 'package:post/sign_in/forgetPassword.dart';
 import 'package:post/sign_up/signup.dart';
 import 'package:post/utils/constants.dart';
+import 'package:post/utils/helper.dart';
 
 class SignIn_body extends StatefulWidget {
   @override
@@ -40,17 +41,6 @@ class _MyHomePageState extends State<SignIn_body> {
   void dispose() {
     // TODO: implement dispose
     super.dispose();
-  }
-
-  void _submit() {
-    final form = formKey.currentState;
-
-    if (form!.validate()) {
-      form.save();
-      _signInWithEmailAndPassword();
-
-      //performLogin();
-    }
   }
 
   void performLogin() {
@@ -104,6 +94,7 @@ class _MyHomePageState extends State<SignIn_body> {
                   padding: const EdgeInsets.all(20.0),
                   child: Form(
                     key: formKey,
+                    autovalidate: true,
                     child: Stack(
                       children: <Widget>[
                         Column(
@@ -179,12 +170,7 @@ class _MyHomePageState extends State<SignIn_body> {
                               children: [
                                 FlatButton(
                                   onPressed: () async {
-                                    setState(() {
-                                       _submit();
-                                      // print(_submit);
-
-                                      //_signInWithEmailAndPassword();
-                                    });
+                                    await onClick();
                                   },
                                   textColor: Colors.white,
                                   padding: const EdgeInsets.all(0.0),
@@ -212,7 +198,10 @@ class _MyHomePageState extends State<SignIn_body> {
                                       ),
                                     ),
                                     padding: const EdgeInsets.all(15.0),
-                                    child: Icon(
+                                    child: _isLoading ? CircularProgressIndicator(
+                                      strokeWidth: 2,
+                                      color: Colors.white,
+                                    ) : Icon(
                                       Icons.arrow_forward,
                                       size: 35.0,
                                       color: Colors.white,
@@ -355,24 +344,79 @@ class _MyHomePageState extends State<SignIn_body> {
     );
   }
 
-  _signInWithEmailAndPassword() async {
-    try {
-      final user = (await _firebaseAuth.signInWithEmailAndPassword(
-              email: _emailController.text.trim(),
-              password: _passwordController.text.trim()))
-          .user;
-      if (user != null) {
-        setState(() {
-          Fluttertoast.showToast(msg: "Signed In Sucessfully");
-
-          Navigator.pushReplacement(
-            context,
-            MaterialPageRoute(builder: (context) => Home()),
-          );
-        });
-      }
-    } catch (e) {
-      Fluttertoast.showToast(msg: e.toString());
+    onClick() async {
+    if (formKey.currentState!.validate()) {
+      formKey.currentState!.save();
+      // showProgress(context, 'Logging in, please wait...', false);
+      print("Logging in");
+      //await resetPassword(email.trim());
+    
+      User user = await _signInWithEmailAndPassword();
+      // SharedPreferences prefs = await SharedPreferences.getInstance();
+      // prefs.setString('userId', user.userID);
+      // getUserAccounts(user.userID);
+      // if (user != null) pushAndRemoveUntil(context, Home(), false);
+    } 
+    else {
+      print("validate");
     }
   }
+
+_signInWithEmailAndPassword() async {
+  var errorMessage;
+  User? user = FirebaseAuth.instance.currentUser;
+  
+  setState(() {
+    _isLoading = true;
+  });
+  try {
+    final userCredential = (await FirebaseAuth.instance.signInWithEmailAndPassword(
+      email: _emailController.text.trim(),
+      password: _passwordController.text.trim()
+    )).user;
+    if(userCredential != null ){
+      if(userCredential.emailVerified == true){
+        errorMessage = 'Successfully logged In!.';
+        pushAndRemoveUntil(context, Home(), false);
+        print(user);
+      } else {
+        errorMessage = 'Please verify your email!';
+      }
+    }
+  } on FirebaseAuthException catch (e) {
+    if (e.code == 'user-not-found') {
+      errorMessage = 'No user found for that email.';
+    } else if (e.code == 'wrong-password') {
+      errorMessage = 'Wrong password provided for that user.';
+    } else if (e.code == 'email-already-in-use') {
+      errorMessage = 'Email already used.';
+    } else if (e.code == 'account-exists-with-different-credential') {
+      errorMessage = 'Email already used.';
+    } else if (e.code == 'user-disabled') {
+      errorMessage = 'User disabled.';
+    } else if (e.code == 'operation-not-allowed') {
+      errorMessage = 'Too many requests to log into this account.';
+    } else if (e.code == 'invalid-email') {
+      errorMessage = 'Email address is invalid.';
+    } else {
+      errorMessage = 'Login failed. Please try again.';
+    }
+    // toastMessage(errorMessage);
+  }
+  toastMessage(errorMessage);
+  setState(() {
+      _isLoading = false;
+    });
+}
+
+void toastMessage(String message) {
+  Fluttertoast.showToast(
+      msg: message,
+      toastLength: Toast.LENGTH_SHORT,
+      gravity: ToastGravity.TOP,
+      timeInSecForIosWeb: 1,
+      fontSize: 16.0);
+  print(message);
+}
+  
 }

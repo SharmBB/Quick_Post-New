@@ -27,6 +27,8 @@ class _SignUpState extends State<SignUp_body> {
   bool showPassword = true;
   bool showConfirmPassword = true;
 
+  bool _isLoading = false;
+
   @override
   void initState() {
     // TODO: implement initState
@@ -37,17 +39,6 @@ class _SignUpState extends State<SignUp_body> {
   void dispose() {
     // TODO: implement dispose
     super.dispose();
-  }
-
-  void _submit() {
-    final form = formKey.currentState;
-
-    if (form!.validate()) {
-      form.save();
-      _register();
-
-      // performLogin();
-    }
   }
 
   void performLogin() {
@@ -103,6 +94,7 @@ class _SignUpState extends State<SignUp_body> {
                       padding: const EdgeInsets.all(20.0),
                       child: Form(
                         key: formKey,
+                        autovalidate: true,
                         child: Stack(
                           children: <Widget>[
                             Column(
@@ -135,7 +127,7 @@ class _SignUpState extends State<SignUp_body> {
                                       SizedBox(
                                         height: 40,
                                       ),
-                                      confirmPasswordInput(),
+                                      confirmPasswordInput(), 
                                       SizedBox(
                                         height: 60,
                                       ),
@@ -169,8 +161,7 @@ class _SignUpState extends State<SignUp_body> {
                                   children: [
                                     FlatButton(
                                       onPressed: () async {
-                                        _submit();
-                                        // _register();
+                                        await onClick();
                                       },
                                       textColor: Colors.white,
                                       padding: const EdgeInsets.all(0.0),
@@ -198,7 +189,10 @@ class _SignUpState extends State<SignUp_body> {
                                           ),
                                         ),
                                         padding: const EdgeInsets.all(15.0),
-                                        child: Icon(
+                                        child: _isLoading ? CircularProgressIndicator(
+                                          strokeWidth: 2,
+                                          color: Colors.white,
+                                        ) : Icon(
                                           Icons.arrow_forward,
                                           size: 35.0,
                                           color: Colors.white,
@@ -379,14 +373,92 @@ class _SignUpState extends State<SignUp_body> {
           );
         }
       });
-    } catch (e) {
+    } on FirebaseAuthException catch (e) {
+      print(e.code);
       Fluttertoast.showToast(msg: e.toString());
     }
     // } else {
     //   Fluttertoast.showToast(msg: "Passwords don't match");
   }
-}
 
+    onClick() async {
+    if (formKey.currentState!.validate()) {
+      formKey.currentState!.save();
+      // showProgress(context, 'Logging in, please wait...', false);
+      print("Logging in");
+      //await resetPassword(email.trim());
+    
+      User user = await _signUpWithEmailAndPassword();
+      // SharedPreferences prefs = await SharedPreferences.getInstance();
+      // prefs.setString('userId', user.userID);
+      // getUserAccounts(user.userID);
+      // if (user != null) pushAndRemoveUntil(context, Home(), false);
+    } 
+    else {
+      print("validate");
+    }
+  }
+
+_signUpWithEmailAndPassword() async {
+  var errorMessage;
+  setState(() {
+    _isLoading = true;
+  });
+  try {
+    final userCredential = (await FirebaseAuth.instance.createUserWithEmailAndPassword(
+      email: _emailController.text.trim(),
+      password: _passwordController.text.trim()
+    )).user;
+    // if(userCredential != null ){
+    //   errorMessage = 'Success!.';
+    // }
+    User? user = FirebaseAuth.instance.currentUser;
+
+    print("---------");
+    print(user);
+    print("---------");
+    if (user!= null && !user.emailVerified) {
+      await user.sendEmailVerification();
+      errorMessage = "Verify your email link!";
+      print('email link!');
+    }
+            
+  } on FirebaseAuthException catch (e) {
+    if (e.code == 'user-not-found') {
+      errorMessage = 'No user found for that email.';
+    } else if (e.code == 'wrong-password') {
+      errorMessage = 'Wrong password provided for that user.';
+    } else if (e.code == 'email-already-in-use') {
+      errorMessage = 'Email already used.';
+    } else if (e.code == 'account-exists-with-different-credential') {
+      errorMessage = 'Email already used.';
+    } else if (e.code == 'user-disabled') {
+      errorMessage = 'User disabled.';
+    } else if (e.code == 'operation-not-allowed') {
+      errorMessage = 'Too many requests to log into this account.';
+    } else if (e.code == 'invalid-email') {
+      errorMessage = 'Email address is invalid.';
+    } else {
+      errorMessage = 'Login failed. Please try again.';
+    }
+    // toastMessage(errorMessage);
+  }
+  toastMessage(errorMessage);
+  setState(() {
+      _isLoading = false;
+    });
+  }
+
+  void toastMessage(String message) {
+  Fluttertoast.showToast(
+      msg: message,
+      toastLength: Toast.LENGTH_SHORT,
+      gravity: ToastGravity.TOP,
+      timeInSecForIosWeb: 1,
+      fontSize: 16.0);
+  print(message);
+}
+}
 // void _register() async {
 //   String email = _emailController.text.trim();
 //   String password = _passwordController.text.trim();
