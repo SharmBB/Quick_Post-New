@@ -36,6 +36,7 @@ class MyApp extends StatelessWidget {
         'Login': (context) => CheckAuth(),
         'onboard': (context) => Signin(), // This is for future use onboard option ADDED BY SHAN!
       },
+      
     );
   }
 }
