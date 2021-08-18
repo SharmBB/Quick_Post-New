@@ -1,19 +1,16 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:post/home/home.dart';
-
 import 'package:post/sign_in/signin.dart';
-import 'package:post/sign_up/signup.dart';
 import 'package:post/utils/constants.dart';
-import 'package:post/utils/helper.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 int? initScreen;
 Future<void> main() async {
-  // WidgetsFlutterBinding.ensureInitialized();
-  // SystemChrome.setPreferredOrientations(
-  //     [DeviceOrientation.portraitUp, DeviceOrientation.portraitDown]);
+  SystemChrome.setPreferredOrientations(
+      [DeviceOrientation.portraitUp, DeviceOrientation.portraitDown]);
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
   SharedPreferences preferences = await SharedPreferences.getInstance();
@@ -23,13 +20,11 @@ Future<void> main() async {
 }
 
 class MyApp extends StatelessWidget {
-  // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      title: 'POS',
-      // home: Home(),
+      title: 'Quick Post',
       theme: ThemeData(
         // fontFamily: 'ProductSans',
         primaryColor: kPrimaryColor,
@@ -38,7 +33,7 @@ class MyApp extends StatelessWidget {
       initialRoute: initScreen == 0 || initScreen == null ? 'onboard' : 'Login',
       routes: {
         'Login': (context) => CheckAuth(),
-        'onboard': (context) => Signup(), // This is for future use onboard option ADDED BY SHAN!
+        'onboard': (context) => Signin(), // This is for future use onboard option ADDED BY SHAN!
       },
     );
   }
@@ -59,13 +54,11 @@ class _CheckAuthState extends State<CheckAuth> {
 
   void _checkIfLoggedIn() async {
     // SharedPreferences localStorage = await SharedPreferences.getInstance();
-    // var token = localStorage.getString('token');
     var userId = FirebaseAuth.instance.currentUser;
 
     if (userId != null) {
       setState(() {
         isAuth = true;
-        // print(localStorage.getString('userId'));
         print(userId);
         print("Successfuly loggedin");
       });
