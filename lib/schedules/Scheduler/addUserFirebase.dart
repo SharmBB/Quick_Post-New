@@ -27,10 +27,10 @@ class _AddUserState extends State<AddUser> {
       return users
           .add({
             'accountId': user!.uid,
-            'profileName': "shan 1",
+            'profileName': "Aaru",
             'email': user.email,
             'emailVerified': user.emailVerified,
-            'tick': true
+            'tick': false
           })
           .then((value) => print("User Added"))
           .catchError((error) => print("Failed to add user: $error"));

@@ -1,7 +1,8 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.example.post">
+     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
    <application
-        android:label="post"
+        android:label="Quick Post"
         android:icon="@mipmap/ic_launcher">
         <activity
             android:name=".MainActivity"

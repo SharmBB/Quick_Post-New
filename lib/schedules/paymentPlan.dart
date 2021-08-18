@@ -188,7 +188,7 @@ class PaymentPlanState extends State<PaymentPlan> {
                   child: GestureDetector(
                     child: ButtonTheme(
                         minWidth: 350.0,
-                        height: 52.0,
+                        height: 42.0,
                         buttonColor: Colors.blue[500],
                         child: RaisedButton(
                           shape: RoundedRectangleBorder(

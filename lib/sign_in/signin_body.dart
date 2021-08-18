@@ -10,6 +10,7 @@ import 'package:post/sign_in/forgetPassword.dart';
 import 'package:post/sign_up/signup.dart';
 import 'package:post/utils/constants.dart';
 import 'package:post/utils/helper.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class SignIn_body extends StatefulWidget {
   @override
@@ -30,7 +31,6 @@ class _MyHomePageState extends State<SignIn_body> {
 
   bool showPassword = true;
   bool _isLoading = false;
-
   @override
   void initState() {
     // TODO: implement initState
@@ -246,7 +246,13 @@ class _MyHomePageState extends State<SignIn_body> {
                   height: 40,
                 ),
              
-               
+               RaisedButton(onPressed: () async {
+                 SharedPreferences prefs = await SharedPreferences.getInstance();
+                //  prefs.setString('userId', user!.uid);
+                 print(prefs.getString('userId'));
+                //  push(context, Signup());
+                //  print(user!.uid);
+               }, child: Text("data"),),
                 Container(
                   alignment: Alignment.topCenter,
                   child: Row(
@@ -353,7 +359,8 @@ class _MyHomePageState extends State<SignIn_body> {
     
       User user = await _signInWithEmailAndPassword();
       // SharedPreferences prefs = await SharedPreferences.getInstance();
-      // prefs.setString('userId', user.userID);
+      // prefs.setString('userId', user.uid);
+      // print(prefs.setString('userId', user.uid));
       // getUserAccounts(user.userID);
       // if (user != null) pushAndRemoveUntil(context, Home(), false);
     } 
@@ -364,7 +371,7 @@ class _MyHomePageState extends State<SignIn_body> {
 
 _signInWithEmailAndPassword() async {
   var errorMessage;
-  User? user = FirebaseAuth.instance.currentUser;
+  SharedPreferences prefs = await SharedPreferences.getInstance();
   
   setState(() {
     _isLoading = true;
@@ -376,9 +383,11 @@ _signInWithEmailAndPassword() async {
     )).user;
     if(userCredential != null ){
       if(userCredential.emailVerified == true){
+        User? user = FirebaseAuth.instance.currentUser;
         errorMessage = 'Successfully logged In!.';
+        prefs.setString('userId', user!.uid);
         pushAndRemoveUntil(context, Home(), false);
-        print(user);
+        // print(user!.uid);
       } else {
         errorMessage = 'Please verify your email!';
       }

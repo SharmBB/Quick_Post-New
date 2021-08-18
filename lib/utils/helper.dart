@@ -190,6 +190,6 @@ Widget _getCircularImageProvider(
               height: size,
               width: size,
             ).image,
-            image: provider)),
+            image: provider),),
   );
 }

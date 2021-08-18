@@ -9,6 +9,7 @@ import 'package:post/sign_in/signin.dart';
 import 'package:post/sign_up/signup.dart';
 import 'package:post/utils/constants.dart';
 import 'package:post/utils/helper.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class SelectFbPage extends StatefulWidget {
   const SelectFbPage({Key? key}) : super(key: key);
@@ -143,12 +144,12 @@ class _SelectFbPageState extends State<SelectFbPage> {
               ),
             ),
             FlatButton(
-              onPressed: () {
+              onPressed: () async{
                 // pushReplacement(context, Signin());
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => Signin()),
-                );
+                await FirebaseAuth.instance.signOut();
+                SharedPreferences prefs = await SharedPreferences.getInstance();
+                prefs.remove("userId");
+                pushReplacement(context, Signin());
               },
               child: Text("Logout"),
             ),
