@@ -3,7 +3,6 @@ import 'package:post/schedules/scheduler/addUserFirebase.dart';
 import 'package:post/schedules/new_schedule.dart';
 import 'package:post/schedules/past_schedule.dart';
 import 'package:post/schedules/paymentPlan.dart';
-import 'package:post/schedules/selectFbPage%20copy.dart';
 import 'package:post/schedules/selectFbPage.dart';
 import 'package:post/schedules/upcoming_schedule.dart';
 
@@ -17,13 +16,8 @@ class _HomeState extends State<Home> {
   final List<Widget> screens = [
     PaymentPlan(),
     SelectFbPage(),
-    PastShedule(),
-    Upcoming(
-      postdate: '',
-      posttime: '',
-      title: '',
-      postimage: '',
-    )
+    PastSchedule(),
+    Upcoming()
   ];
   final PageStorageBucket bucket = PageStorageBucket();
   Widget currentScreen =
@@ -107,12 +101,7 @@ class _HomeState extends State<Home> {
                   color: currentTab == 0 ? Colors.purple : Colors.grey,
                   onPressed: () {
                     setState(() {
-                      currentScreen = Upcoming(
-                        postdate: '',
-                        posttime: '',
-                        title: '',
-                        postimage: '',
-                      ); // if user taps on this dashboard tab will be active
+                      currentScreen = Upcoming(); // if user taps on this dashboard tab will be active
                       currentTab = 0;
                     });
                   },
@@ -123,7 +112,7 @@ class _HomeState extends State<Home> {
                   onPressed: () {
                     setState(() {
                       currentScreen =
-                          AddUser(); // if user taps on this dashboard tab will be active
+                          PastSchedule(); // if user taps on this dashboard tab will be active
                       currentTab = 1;
                     });
                   },

@@ -27,10 +27,7 @@ class _SelectFbPageState extends State<SelectFbPage> {
       // .where("email", isEqualTo: "shan@gmail.com")
       .snapshots();
 
-  CollectionReference collectionRef =
-      FirebaseFirestore.instance.collection('usersProfile');
-  CollectionReference users =
-      FirebaseFirestore.instance.collection('usersProfile');
+  CollectionReference users = FirebaseFirestore.instance.collection('usersProfile');
   late Query query;
 
   Future<void> addUser(firstName, lastName, email, accountId) {

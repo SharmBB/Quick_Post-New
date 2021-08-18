@@ -40,7 +40,7 @@ class PaymentPlanState extends State<PaymentPlan> {
       appBar: AppBar(
         centerTitle: true,
         title: Text(
-          'Choose your payment Plan',
+          'Choose your payment plan',
           style: TextStyle(
               color: kPrimaryDarkColor,
               fontSize: 18,

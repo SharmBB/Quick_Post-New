@@ -312,15 +312,15 @@ class _NewScheduleState extends State<NewSchedule> {
                 //           ),
                 //         );
 
-                var route = new MaterialPageRoute(
-                  builder: (BuildContext context) => new Upcoming(
-                    postdate: "${widget.date2}",
-                    posttime: "${widget.time}",
-                    postimage: _image.toString(),
-                    title: myTextController.text,
-                  ),
-                );
-                Navigator.of(context).push(route);
+                // var route = new MaterialPageRoute(
+                //   builder: (BuildContext context) => new Upcoming(
+                //     postdate: "${widget.date2}",
+                //     posttime: "${widget.time}",
+                //     postimage: _image.toString(),
+                //     title: myTextController.text,
+                //   ),
+                // );
+                // Navigator.of(context).push(route);
               },
               child: Text(
                 "Post",

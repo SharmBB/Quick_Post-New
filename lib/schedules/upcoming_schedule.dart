@@ -1,100 +1,75 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:post/components/ScheduleCard.dart';
+import 'package:post/utils/constants.dart';
 
 class Upcoming extends StatefulWidget {
-  const Upcoming(
-      {Key? key,
-      required this.title,
-      required this.postdate,
-      required this.posttime,
-      required this.postimage})
-      : super(key: key);
-
-  final String title;
-  final String postdate;
-  final String posttime;
-  final String postimage;
+  const Upcoming({Key? key}) : super(key: key);
 
   @override
   _UpcomingState createState() => _UpcomingState();
 }
 
 class _UpcomingState extends State<Upcoming> {
+  CollectionReference users =
+      FirebaseFirestore.instance.collection('usersProfile');
+  User? user = FirebaseAuth.instance.currentUser;
+  late Query query;
+
+  @override
+  void initState() {
+    Query profiles = users.where("accountId", isEqualTo: user!.uid);
+    query = profiles;
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         centerTitle: true,
         title: Text(
-          'Upcoming Sedules',
-          style: TextStyle(
-              color: Colors.grey, fontSize: 25.0, fontWeight: FontWeight.bold),
+          'Upcoming Schedule',
+          style: TextStyle(color: kPrimaryDarkColor),
         ),
         backgroundColor: Colors.transparent,
+        automaticallyImplyLeading: false,
         elevation: 0,
       ),
       body: SingleChildScrollView(
-        child: Padding(
-          padding: const EdgeInsets.only(top: 20, left: 20.0, right: 20.0),
-          child: Card(
-            color: Colors.grey[50],
-            elevation: 0,
-            child:
-                Column(mainAxisAlignment: MainAxisAlignment.start, children: [
-              Align(
-                alignment: Alignment.centerLeft,
-                child: Text(
-                  "${widget.postdate}",
-                  style: TextStyle(fontSize: 16.0, color: Colors.black),
-                ),
-              ),
-              SizedBox(
-                height: 20,
-              ),
-              Row(mainAxisAlignment: MainAxisAlignment.start, children: [
-                Container(
-                    width: 60,
-                    child: Text(
-                      "${widget.posttime}",
-                      overflow: TextOverflow.ellipsis,
-                      maxLines: 5,
-                      style: TextStyle(fontSize: 14.0, color: Colors.grey),
-                    )),
-                SizedBox(
-                  width: 10,
-                ),
-                Card(
-                  color: Colors.grey[50],
-                  elevation: 3,
-                  child: Row(
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      children: [
-                        Padding(
-                          padding: const EdgeInsets.all(2.0),
-                          child: Container(
-                              height: 70,
-                              width: 70,
-                              alignment: Alignment.centerLeft,
-                              child: Image(
-                                image: AssetImage('assets/user.jpg'),
-                                fit: BoxFit.fill,
-                              )),
-                        ),
-                        Container(
-                          width: 230,
-                          child: Padding(
-                            padding: const EdgeInsets.only(
-                                left: 2.0, top: 10.0, bottom: 10.0, right: 2.0),
-                            child: Text(
-                              "${widget.title}",
-                              overflow: TextOverflow.ellipsis,
-                              maxLines: 8,
-                            ),
-                          ),
-                        )
-                      ]),
-                )
-              ])
-            ]),
+        child: Container(
+          width: 500,
+          height: 500,
+          child: StreamBuilder<QuerySnapshot>(
+            stream: query.snapshots(),
+            builder:
+                (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
+              if (snapshot.hasError) {
+                return Text('Something went wrong');
+              }
+
+              if (snapshot.connectionState == ConnectionState.waiting) {
+                return Center(child: CircularProgressIndicator());
+              }
+
+              return new ListView(
+                children: snapshot.data!.docs.map((DocumentSnapshot document) {
+                  Map<String, dynamic> data =
+                      document.data() as Map<String, dynamic>;
+                  print("data");
+                  print(data);
+                  return CardRow(
+                    src: "https://moodforcode.com/assets/images/moodforcode.jpg",
+                    time: "12.3.21",
+                    content: "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it",
+                    press: () {
+                      print(data);
+                    },
+                  );
+                }).toList(),
+              );
+            },
           ),
         ),
       ),
