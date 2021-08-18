@@ -52,242 +52,244 @@ class _MyHomePageState extends State<SignIn_body> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-        body: Container(
-      height: double.infinity,
-      width: double.infinity,
-      decoration: BoxDecoration(
-        gradient: LinearGradient(
-          begin: Alignment.topLeft,
-          end: Alignment.bottomRight,
-          colors: [
-            Color(0xFFFFE0B2),
-            Color(0xFFFFEB74D),
-            Colors.pinkAccent,
-            Color(0xFFBA68C8),
-            Color(0xFF7E57C2),
-          ],
+    return SafeArea(
+      child: Scaffold(
+          body: Container(
+        height: double.infinity,
+        width: double.infinity,
+        decoration: BoxDecoration(
+          gradient: LinearGradient(
+            begin: Alignment.topLeft,
+            end: Alignment.bottomRight,
+            colors: [
+              Color(0xFFFFE0B2),
+              Color(0xFFFFEB74D),
+              Colors.pinkAccent,
+              Color(0xFFBA68C8),
+              Color(0xFF7E57C2),
+            ],
+          ),
         ),
-      ),
-      child: SafeArea(
-        child: SingleChildScrollView(
-          child: Stack(children: [
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.center,
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: <Widget>[
-                SizedBox(
-                  height: 70,
-                ),
-                Text(
-                  "Sign In",
-                  style: TextStyle(
-                    color: kPrimaryLightColor,
-                    fontWeight: FontWeight.bold,
-                    fontSize: 25,
+        child: SafeArea(
+          child: SingleChildScrollView(
+            child: Stack(children: [
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: <Widget>[
+                  SizedBox(
+                    height: 70,
                   ),
-                ),
-                SizedBox(
-                  height: 30,
-                ),
-                Padding(
-                  padding: const EdgeInsets.all(20.0),
-                  child: Form(
-                    key: formKey,
-                    autovalidate: true,
-                    child: Stack(
-                      children: <Widget>[
-                        Column(
-                          children: <Widget>[
-                            Container(
-                              padding: EdgeInsets.symmetric(horizontal: 15),
-                              decoration: BoxDecoration(
-                                color: Colors.white,
-                                shape: BoxShape.rectangle,
-                                borderRadius: BorderRadius.circular(8),
-                                boxShadow: [
-                                  BoxShadow(
-                                    color: Colors.black.withOpacity(0.2),
-                                    spreadRadius: 1,
-                                    blurRadius: 10,
-                                    offset: Offset(0, 3),
-                                  )
-                                ],
+                  Text(
+                    "Sign In",
+                    style: TextStyle(
+                      color: kPrimaryLightColor,
+                      fontWeight: FontWeight.bold,
+                      fontSize: 25,
+                    ),
+                  ),
+                  SizedBox(
+                    height: 30,
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.all(20.0),
+                    child: Form(
+                      key: formKey,
+                      autovalidate: true,
+                      child: Stack(
+                        children: <Widget>[
+                          Column(
+                            children: <Widget>[
+                              Container(
+                                padding: EdgeInsets.symmetric(horizontal: 15),
+                                decoration: BoxDecoration(
+                                  color: Colors.white,
+                                  shape: BoxShape.rectangle,
+                                  borderRadius: BorderRadius.circular(8),
+                                  boxShadow: [
+                                    BoxShadow(
+                                      color: Colors.black.withOpacity(0.2),
+                                      spreadRadius: 1,
+                                      blurRadius: 10,
+                                      offset: Offset(0, 3),
+                                    )
+                                  ],
+                                ),
+                                child: Column(
+                                  children: <Widget>[
+                                    SizedBox(
+                                      height: 20,
+                                    ),
+                                    emailInput(),
+                                    SizedBox(
+                                      height: 40,
+                                    ),
+                                    passwordInput(),
+                                    SizedBox(
+                                      height: 40,
+                                    ),
+                                    Row(
+                                      children: [
+                                        GestureDetector(
+                                          onTap: () {
+                                            Navigator.push(
+                                              context,
+                                              MaterialPageRoute(
+                                                  builder: (context) =>
+                                                      Forget(title: "")),
+                                            );
+                                          },
+                                          child: Text(
+                                            "Forget Password?",
+                                            style: TextStyle(
+                                                color: kPrimaryColor,
+                                                decoration:
+                                                    TextDecoration.underline
+                                                // fontWeight: FontWeight.bold,
+                                                // fontSize: 20,
+                                                ),
+                                          ),
+                                        )
+                                      ],
+                                    ),
+                                    SizedBox(
+                                      height: 100,
+                                    ),
+                                  ],
+                                ),
                               ),
+                            ],
+                          ),
+                          Positioned(
+                            bottom: -35,
+                            right: 0,
+                            left: 0,
+                            child: Container(
                               child: Column(
-                                children: <Widget>[
-                                  SizedBox(
-                                    height: 20,
-                                  ),
-                                  emailInput(),
-                                  SizedBox(
-                                    height: 40,
-                                  ),
-                                  passwordInput(),
-                                  SizedBox(
-                                    height: 40,
-                                  ),
-                                  Row(
-                                    children: [
-                                      GestureDetector(
-                                        onTap: () {
-                                          Navigator.push(
-                                            context,
-                                            MaterialPageRoute(
-                                                builder: (context) =>
-                                                    Forget(title: "")),
-                                          );
-                                        },
-                                        child: Text(
-                                          "Forget Password?",
-                                          style: TextStyle(
-                                              color: kPrimaryColor,
-                                              decoration:
-                                                  TextDecoration.underline
-                                              // fontWeight: FontWeight.bold,
-                                              // fontSize: 20,
-                                              ),
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                crossAxisAlignment: CrossAxisAlignment.center,
+                                children: [
+                                  FlatButton(
+                                    onPressed: () async {
+                                      await onClick();
+                                    },
+                                    textColor: Colors.white,
+                                    padding: const EdgeInsets.all(0.0),
+                                    shape: CircleBorder(
+                                      side: BorderSide(
+                                          color: Colors.white,
+                                          width: 5,
+                                          style: BorderStyle.solid),
+                                    ),
+                                    child: Container(
+                                      decoration: const BoxDecoration(
+                                        borderRadius: BorderRadius.all(
+                                            Radius.circular(100.0)),
+                                        gradient: LinearGradient(
+                                          begin: Alignment.bottomRight,
+                                          end: Alignment.topLeft,
+                                          // stops: [0.3, 0.3, 0.7, 0.1, 1],
+                                          colors: [
+                                            Color(0xFFFFE0B2),
+                                            Color(0xFFFFB74D),
+                                            Color(0xFFE040FB),
+                                            Color(0xFFBA68C8),
+                                            Color(0xFF7E57C2),
+                                          ],
                                         ),
-                                      )
-                                    ],
-                                  ),
-                                  SizedBox(
-                                    height: 100,
-                                  ),
-                                ],
-                              ),
-                            ),
-                          ],
-                        ),
-                        Positioned(
-                          bottom: -35,
-                          right: 0,
-                          left: 0,
-                          child: Container(
-                            child: Column(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              crossAxisAlignment: CrossAxisAlignment.center,
-                              children: [
-                                FlatButton(
-                                  onPressed: () async {
-                                    await onClick();
-                                  },
-                                  textColor: Colors.white,
-                                  padding: const EdgeInsets.all(0.0),
-                                  shape: CircleBorder(
-                                    side: BorderSide(
+                                      ),
+                                      padding: const EdgeInsets.all(15.0),
+                                      child: _isLoading ? CircularProgressIndicator(
+                                        strokeWidth: 2,
                                         color: Colors.white,
-                                        width: 5,
-                                        style: BorderStyle.solid),
-                                  ),
-                                  child: Container(
-                                    decoration: const BoxDecoration(
-                                      borderRadius: BorderRadius.all(
-                                          Radius.circular(100.0)),
-                                      gradient: LinearGradient(
-                                        begin: Alignment.bottomRight,
-                                        end: Alignment.topLeft,
-                                        // stops: [0.3, 0.3, 0.7, 0.1, 1],
-                                        colors: [
-                                          Color(0xFFFFE0B2),
-                                          Color(0xFFFFB74D),
-                                          Color(0xFFE040FB),
-                                          Color(0xFFBA68C8),
-                                          Color(0xFF7E57C2),
-                                        ],
+                                      ) : Icon(
+                                        Icons.arrow_forward,
+                                        size: 35.0,
+                                        color: Colors.white,
                                       ),
                                     ),
-                                    padding: const EdgeInsets.all(15.0),
-                                    child: _isLoading ? CircularProgressIndicator(
-                                      strokeWidth: 2,
-                                      color: Colors.white,
-                                    ) : Icon(
-                                      Icons.arrow_forward,
-                                      size: 35.0,
-                                      color: Colors.white,
-                                    ),
                                   ),
-                                ),
-                              ],
+                                ],
+                              ),
                             ),
+                          ),
+                        ],
+                        overflow: Overflow.visible,
+                      ),
+                    ),
+                  ),
+                  SizedBox(
+                    height: 80,
+                  ),
+                  Container(
+                    width: 250.0,
+                    child: Row(children: <Widget>[
+                      Expanded(
+                          child: Divider(
+                        thickness: 1.0,
+                        color: Colors.white,
+                      )),
+                      Text(
+                        "   OR   ",
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                      Expanded(
+                          child: Divider(
+                        thickness: 1.0,
+                        color: Colors.white,
+                      )),
+                    ]),
+                  ),
+                  SizedBox(
+                    height: 40,
+                  ),
+               
+                 RaisedButton(onPressed: () async {
+                   SharedPreferences prefs = await SharedPreferences.getInstance();
+                  //  prefs.setString('userId', user!.uid);
+                   print(prefs.getString('userId'));
+                  //  push(context, Signup());
+                  //  print(user!.uid);
+                 }, child: Text("data"),),
+                  Container(
+                    alignment: Alignment.topCenter,
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: <Widget>[
+                        Text(
+                          "Don't Have an account ?",
+                          style: TextStyle(color: Colors.white),
+                        ),
+                        SizedBox(
+                          width: 5,
+                        ),
+                        GestureDetector(
+                          onTap: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(builder: (context) => Signup()),
+                            );
+                          },
+                          child: Text(
+                            'Sign Up',
+                            style: TextStyle(
+                                fontWeight: FontWeight.w500, color: Colors.white),
                           ),
                         ),
                       ],
-                      overflow: Overflow.visible,
                     ),
                   ),
-                ),
-                SizedBox(
-                  height: 80,
-                ),
-                Container(
-                  width: 250.0,
-                  child: Row(children: <Widget>[
-                    Expanded(
-                        child: Divider(
-                      thickness: 1.0,
-                      color: Colors.white,
-                    )),
-                    Text(
-                      "   OR   ",
-                      style: TextStyle(
-                        color: Colors.white,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                    Expanded(
-                        child: Divider(
-                      thickness: 1.0,
-                      color: Colors.white,
-                    )),
-                  ]),
-                ),
-                SizedBox(
-                  height: 40,
-                ),
-             
-               RaisedButton(onPressed: () async {
-                 SharedPreferences prefs = await SharedPreferences.getInstance();
-                //  prefs.setString('userId', user!.uid);
-                 print(prefs.getString('userId'));
-                //  push(context, Signup());
-                //  print(user!.uid);
-               }, child: Text("data"),),
-                Container(
-                  alignment: Alignment.topCenter,
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: <Widget>[
-                      Text(
-                        "Don't Have an account ?",
-                        style: TextStyle(color: Colors.white),
-                      ),
-                      SizedBox(
-                        width: 5,
-                      ),
-                      GestureDetector(
-                        onTap: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(builder: (context) => Signup()),
-                          );
-                        },
-                        child: Text(
-                          'Sign Up',
-                          style: TextStyle(
-                              fontWeight: FontWeight.w500, color: Colors.white),
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              ],
-            ),
-          ]),
+                ],
+              ),
+            ]),
+          ),
         ),
-      ),
-    ));
+      )),
+    );
   }
 
   Widget emailInput() {

@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -50,229 +51,231 @@ class _SignUpState extends State<SignUp_body> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-        resizeToAvoidBottomInset: false,
-        key: scaffoldKey,
-        body: Container(
-          height: double.infinity,
-          width: double.infinity,
-          decoration: BoxDecoration(
-            gradient: LinearGradient(
-              begin: Alignment.topLeft,
-              end: Alignment.bottomRight,
-              colors: [
-                Color(0xFFFFE0B2),
-                Color(0xFFFFEB74D),
-                Colors.pinkAccent,
-                Color(0xFFBA68C8),
-                Color(0xFF7E57C2),
-              ],
+    return SafeArea(
+      child: Scaffold(
+          resizeToAvoidBottomInset: false,
+          key: scaffoldKey,
+          body: Container(
+            height: double.infinity,
+            width: double.infinity,
+            decoration: BoxDecoration(
+              gradient: LinearGradient(
+                begin: Alignment.topLeft,
+                end: Alignment.bottomRight,
+                colors: [
+                  Color(0xFFFFE0B2),
+                  Color(0xFFFFEB74D),
+                  Colors.pinkAccent,
+                  Color(0xFFBA68C8),
+                  Color(0xFF7E57C2),
+                ],
+              ),
             ),
-          ),
-          child: SafeArea(
-            child: SingleChildScrollView(
-              child: Stack(children: [
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: <Widget>[
-                    SizedBox(
-                      height: 50,
-                    ),
-                    Text(
-                      "Sign Up",
-                      style: TextStyle(
-                        color: kPrimaryLightColor,
-                        fontWeight: FontWeight.bold,
-                        fontSize: 25,
+            child: SafeArea(
+              child: SingleChildScrollView(
+                child: Stack(children: [
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: <Widget>[
+                      SizedBox(
+                        height: 50,
                       ),
-                    ),
-                    SizedBox(
-                      height: 30,
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.all(20.0),
-                      child: Form(
-                        key: formKey,
-                        autovalidate: true,
-                        child: Stack(
-                          children: <Widget>[
-                            Column(
-                              children: <Widget>[
-                                Container(
-                                  padding: EdgeInsets.symmetric(horizontal: 15),
-                                  decoration: BoxDecoration(
-                                    color: Colors.white,
-                                    shape: BoxShape.rectangle,
-                                    borderRadius: BorderRadius.circular(8),
-                                    boxShadow: [
-                                      BoxShadow(
-                                        color: Colors.black.withOpacity(0.2),
-                                        spreadRadius: 1,
-                                        blurRadius: 10,
-                                        offset: Offset(0, 3),
-                                      )
-                                    ],
+                      Text(
+                        "Sign Up",
+                        style: TextStyle(
+                          color: kPrimaryLightColor,
+                          fontWeight: FontWeight.bold,
+                          fontSize: 25,
+                        ),
+                      ),
+                      SizedBox(
+                        height: 30,
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.all(20.0),
+                        child: Form(
+                          key: formKey,
+                          autovalidate: true,
+                          child: Stack(
+                            children: <Widget>[
+                              Column(
+                                children: <Widget>[
+                                  Container(
+                                    padding: EdgeInsets.symmetric(horizontal: 15),
+                                    decoration: BoxDecoration(
+                                      color: Colors.white,
+                                      shape: BoxShape.rectangle,
+                                      borderRadius: BorderRadius.circular(8),
+                                      boxShadow: [
+                                        BoxShadow(
+                                          color: Colors.black.withOpacity(0.2),
+                                          spreadRadius: 1,
+                                          blurRadius: 10,
+                                          offset: Offset(0, 3),
+                                        )
+                                      ],
+                                    ),
+                                    child: Column(
+                                      children: <Widget>[
+                                        SizedBox(
+                                          height: 20,
+                                        ),
+                                        emailInput(),
+                                        SizedBox(
+                                          height: 40,
+                                        ),
+                                        passwordInput(),
+                                        SizedBox(
+                                          height: 40,
+                                        ),
+                                        confirmPasswordInput(), 
+                                        SizedBox(
+                                          height: 60,
+                                        ),
+                                        Row(
+                                          children: [
+                                            Text(
+                                              "By clicking Sign up, you are accepting terms and privacy.",
+                                              style: TextStyle(
+                                                color: kPrimaryDarkColor,
+                                                fontSize: 10,
+                                              ),
+                                            )
+                                          ],
+                                        ),
+                                        SizedBox(
+                                          height: 80,
+                                        ),
+                                      ],
+                                    ),
                                   ),
+                                ],
+                              ),
+                              Positioned(
+                                bottom: -35,
+                                right: 0,
+                                left: 0,
+                                child: Container(
                                   child: Column(
-                                    children: <Widget>[
-                                      SizedBox(
-                                        height: 20,
-                                      ),
-                                      emailInput(),
-                                      SizedBox(
-                                        height: 40,
-                                      ),
-                                      passwordInput(),
-                                      SizedBox(
-                                        height: 40,
-                                      ),
-                                      confirmPasswordInput(), 
-                                      SizedBox(
-                                        height: 60,
-                                      ),
-                                      Row(
-                                        children: [
-                                          Text(
-                                            "By clicking Sign up, you are accepting terms and privacy.",
-                                            style: TextStyle(
-                                              color: kPrimaryDarkColor,
-                                              fontSize: 10,
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    crossAxisAlignment: CrossAxisAlignment.center,
+                                    children: [
+                                      FlatButton(
+                                        onPressed: () async {
+                                          await onClick();
+                                        },
+                                        textColor: Colors.white,
+                                        padding: const EdgeInsets.all(0.0),
+                                        shape: CircleBorder(
+                                          side: BorderSide(
+                                              color: Colors.white,
+                                              width: 5,
+                                              style: BorderStyle.solid),
+                                        ),
+                                        child: Container(
+                                          decoration: const BoxDecoration(
+                                            borderRadius: BorderRadius.all(
+                                                Radius.circular(100.0)),
+                                            gradient: LinearGradient(
+                                              begin: Alignment.bottomRight,
+                                              end: Alignment.topLeft,
+                                              // stops: [0.3, 0.3, 0.7, 0.1, 1],
+                                              colors: [
+                                                Color(0xFFFFE0B2),
+                                                Color(0xFFFFB74D),
+                                                Color(0xFFE040FB),
+                                                Color(0xFFBA68C8),
+                                                Color(0xFF7E57C2),
+                                              ],
                                             ),
-                                          )
-                                        ],
-                                      ),
-                                      SizedBox(
-                                        height: 80,
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                              ],
-                            ),
-                            Positioned(
-                              bottom: -35,
-                              right: 0,
-                              left: 0,
-                              child: Container(
-                                child: Column(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  crossAxisAlignment: CrossAxisAlignment.center,
-                                  children: [
-                                    FlatButton(
-                                      onPressed: () async {
-                                        await onClick();
-                                      },
-                                      textColor: Colors.white,
-                                      padding: const EdgeInsets.all(0.0),
-                                      shape: CircleBorder(
-                                        side: BorderSide(
+                                          ),
+                                          padding: const EdgeInsets.all(15.0),
+                                          child: _isLoading ? CircularProgressIndicator(
+                                            strokeWidth: 2,
                                             color: Colors.white,
-                                            width: 5,
-                                            style: BorderStyle.solid),
-                                      ),
-                                      child: Container(
-                                        decoration: const BoxDecoration(
-                                          borderRadius: BorderRadius.all(
-                                              Radius.circular(100.0)),
-                                          gradient: LinearGradient(
-                                            begin: Alignment.bottomRight,
-                                            end: Alignment.topLeft,
-                                            // stops: [0.3, 0.3, 0.7, 0.1, 1],
-                                            colors: [
-                                              Color(0xFFFFE0B2),
-                                              Color(0xFFFFB74D),
-                                              Color(0xFFE040FB),
-                                              Color(0xFFBA68C8),
-                                              Color(0xFF7E57C2),
-                                            ],
+                                          ) : Icon(
+                                            Icons.arrow_forward,
+                                            size: 35.0,
+                                            color: Colors.white,
                                           ),
                                         ),
-                                        padding: const EdgeInsets.all(15.0),
-                                        child: _isLoading ? CircularProgressIndicator(
-                                          strokeWidth: 2,
-                                          color: Colors.white,
-                                        ) : Icon(
-                                          Icons.arrow_forward,
-                                          size: 35.0,
-                                          color: Colors.white,
-                                        ),
                                       ),
-                                    ),
-                                  ],
+                                    ],
+                                  ),
                                 ),
+                              ),
+                            ],
+                            overflow: Overflow.visible,
+                          ),
+                        ),
+                      ),
+                      SizedBox(
+                        height: 40,
+                      ),
+                      Container(
+                        width: 250.0,
+                        child: Row(children: <Widget>[
+                          Expanded(
+                              child: Divider(
+                            thickness: 1.0,
+                            color: Colors.white,
+                          )),
+                          Text(
+                            "   OR   ",
+                            style: TextStyle(
+                              color: Colors.white,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                          Expanded(
+                              child: Divider(
+                            thickness: 1.0,
+                            color: Colors.white,
+                          )),
+                        ]),
+                      ),
+                      SizedBox(
+                        height: 40,
+                      ),
+                      Container(
+                        alignment: Alignment.topCenter,
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: <Widget>[
+                            Text(
+                              "Alredy Have an account ?",
+                              style: TextStyle(color: Colors.white),
+                            ),
+                            SizedBox(
+                              width: 5,
+                            ),
+                            GestureDetector(
+                              onTap: () {
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) => Signin()),
+                                );
+                              },
+                              child: Text(
+                                'Sign In',
+                                style: TextStyle(
+                                    fontWeight: FontWeight.w500,
+                                    color: Colors.white),
                               ),
                             ),
                           ],
-                          overflow: Overflow.visible,
                         ),
                       ),
-                    ),
-                    SizedBox(
-                      height: 40,
-                    ),
-                    Container(
-                      width: 250.0,
-                      child: Row(children: <Widget>[
-                        Expanded(
-                            child: Divider(
-                          thickness: 1.0,
-                          color: Colors.white,
-                        )),
-                        Text(
-                          "   OR   ",
-                          style: TextStyle(
-                            color: Colors.white,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                        Expanded(
-                            child: Divider(
-                          thickness: 1.0,
-                          color: Colors.white,
-                        )),
-                      ]),
-                    ),
-                    SizedBox(
-                      height: 40,
-                    ),
-                    Container(
-                      alignment: Alignment.topCenter,
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        children: <Widget>[
-                          Text(
-                            "Alredy Have an account ?",
-                            style: TextStyle(color: Colors.white),
-                          ),
-                          SizedBox(
-                            width: 5,
-                          ),
-                          GestureDetector(
-                            onTap: () {
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) => Signin()),
-                              );
-                            },
-                            child: Text(
-                              'Sign In',
-                              style: TextStyle(
-                                  fontWeight: FontWeight.w500,
-                                  color: Colors.white),
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ],
-                ),
-              ]),
+                    ],
+                  ),
+                ]),
+              ),
             ),
-          ),
-        ));
+          )),
+    );
   }
 
   Widget emailInput() {
@@ -420,7 +423,19 @@ _signUpWithEmailAndPassword() async {
     if (user!= null && !user.emailVerified) {
       await user.sendEmailVerification();
       errorMessage = "Verify your email link!";
-      print('email link!');
+      print(errorMessage);
+
+      CollectionReference users = FirebaseFirestore.instance.collection('user');
+       users.add({
+            'accountId': user.uid,
+            'profileName': "Aaru",
+            'email': user.email,
+            'emailVerified': user.emailVerified,
+            'tick': false
+          })
+          .then((value) => print("User Added"))
+          .catchError((error) => print("Failed to add user: $error"));
+
     }
             
   } on FirebaseAuthException catch (e) {
@@ -458,55 +473,5 @@ _signUpWithEmailAndPassword() async {
       fontSize: 16.0);
   print(message);
 }
+
 }
-// void _register() async {
-//   String email = _emailController.text.trim();
-//   String password = _passwordController.text.trim();
-//   String confpassword = _confpasswordController.text.trim();
-//   if(password == confpassword){
-//
-//     try {
-//       final User user = ( await
-//       _auth.createUserWithEmailAndPassword(
-//         email: email,
-//         password: password,
-//       )
-//       ).user;
-//       setState(() {
-//         isLoading = true;
-//       });
-//       new Future.delayed(new Duration(milliseconds: 500),(){
-//         setState(() {
-//           if (user != null) {
-//             setState(() {
-//               Navigator.pushAndRemoveUntil<dynamic>(
-//                 context,
-//                 MaterialPageRoute<dynamic>(
-//                   builder: (BuildContext context) => home(),
-//                 ),
-//                     (
-//                     route) => false, //if you want to disable back feature set to false
-//               );
-//               _success = true;
-//               _userEmail = user.email;
-//             });
-//           } else {
-//             setState(() {
-//               _success = true;
-//
-//             });
-//           }
-//           isLoading = false;
-//         });
-//       });
-//
-//     }
-//     catch(e){
-//       Fluttertoast.showToast(msg: e.toString());
-//     }
-//   }
-//   else{
-//     Fluttertoast.showToast(msg: "Passwords do not match");
-//   }
-//
-// }

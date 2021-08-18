@@ -9,8 +9,8 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 int? initScreen;
 Future<void> main() async {
-  SystemChrome.setPreferredOrientations(
-      [DeviceOrientation.portraitUp, DeviceOrientation.portraitDown]);
+  // SystemChrome.setPreferredOrientations(
+  //     [DeviceOrientation.portraitUp, DeviceOrientation.portraitDown]);
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
   SharedPreferences preferences = await SharedPreferences.getInstance();
@@ -56,7 +56,10 @@ class _CheckAuthState extends State<CheckAuth> {
 
   void _checkIfLoggedIn() async {
     // SharedPreferences localStorage = await SharedPreferences.getInstance();
-    var userId = FirebaseAuth.instance.currentUser;
+
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    var userId = prefs.getString('userId');
+    // var userId = FirebaseAuth.instance.currentUser;
 
     if (userId != null) {
       setState(() {
