@@ -70,14 +70,7 @@ class _NewScheduleState extends State<NewSchedule> {
   final List<Map<String, dynamic>> _allUsers = [
     {"id": 1, "name": "Andy", "age": 29},
     {"id": 2, "name": "Aragon", "age": 40},
-    {"id": 3, "name": "Bob", "age": 5},
-    {"id": 4, "name": "Barbara", "age": 35},
-    {"id": 5, "name": "Candy", "age": 21},
-    {"id": 6, "name": "Colin", "age": 55},
-    {"id": 7, "name": "Audra", "age": 30},
-    {"id": 8, "name": "Banana", "age": 14},
-    {"id": 9, "name": "Caversky", "age": 100},
-    {"id": 10, "name": "Becky", "age": 32},
+    {"id": 3, "name": "Bob", "age": 5}
   ];
 
   // _imgFromCamera() async {
@@ -132,42 +125,32 @@ class _NewScheduleState extends State<NewSchedule> {
   void _showPicker(context) {
     showModalBottomSheet(
         context: context,
+        backgroundColor: Colors.transparent,
         builder: (BuildContext bc) {
-          return SafeArea(
-            child: Container(
-              margin: EdgeInsets.symmetric(horizontal: 10),
-              child: new Wrap(
-                children: <Widget>[
-                  new ListTile(
-                      title: new Text('Photo Library'),
-                      trailing: new Icon(Icons.photo_library),
-                      onTap: () {
-                        _getFromGallery();
-                        Navigator.of(context).pop();
-                      }),
-                  new ListTile(
-                    title: new Text('Take Photo'),
-                    trailing: new Icon(Icons.photo_camera),
-                    onTap: () {
-                      _getFromCamera();
-                      Navigator.of(context).pop();
-                    },
-                  ),
-                  Divider(),
-                  new ListTile(
-                    shape: Border.all(
-                        color: Colors.grey, width: 10, style: BorderStyle.solid),
-                    title: new Text(
-                      'Cancel',
-                      style: TextStyle(fontWeight: FontWeight.bold),
-                      textAlign: TextAlign.center,
-                    ),
-                    onTap: () {
-                      Navigator.of(context).pop();
-                    },
-                  ),
-                ],
+          return CupertinoActionSheet(
+            actions: <Widget>[
+              ListTile(
+                  title: new Text('Gallery'),
+                  trailing: new Icon(Icons.photo_library),
+                  onTap: () {
+                    _getFromGallery();
+                    Navigator.of(context).pop();
+                  }),
+              ListTile(
+                title: new Text('Camera'),
+                trailing: new Icon(Icons.photo_camera),
+                onTap: () {
+                  _getFromCamera();
+                  Navigator.of(context).pop();
+                },
               ),
+            ],
+            cancelButton: CupertinoActionSheetAction(
+              isDefaultAction: true,
+              child: Text('Cancel'),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
             ),
           );
         });
@@ -276,16 +259,15 @@ class _NewScheduleState extends State<NewSchedule> {
     return Scaffold(
       appBar: AppBar(
         leading: IconButton(
-          icon: Icon(Icons.close, color: Colors.black),
-          onPressed: () =>    Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) {
-                              return Home();
-                            },
-                          ),
-          )
-        ),
+            icon: Icon(Icons.close, color: Colors.black),
+            onPressed: () => Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) {
+                      return Home();
+                    },
+                  ),
+                )),
         centerTitle: true,
         title: Text(
           'New Schedule',
@@ -426,58 +408,21 @@ class _NewScheduleState extends State<NewSchedule> {
                                     )),
                                     actions: <Widget>[
                                       Padding(
-                                        padding:
-                                            const EdgeInsets.only(bottom: 10),
-                                        child: Container(
-                                          width: 100,
-                                          height: 30,
-                                          margin: EdgeInsets.symmetric(
-                                              horizontal: 15),
-                                          decoration: new BoxDecoration(
-                                            borderRadius:
-                                                BorderRadius.circular(35.0),
-                                            gradient: new LinearGradient(
-                                              begin: Alignment.topLeft,
-                                              end: Alignment.bottomRight,
-                                              colors: [
-                                                Color(0xFFFFE0B2),
-                                                Color(0xFFFFB74D),
-                                                Color(0xFFE040FB),
-                                                Color(0xFFBA68C8),
-                                                Color(0xFF7E57C2),
-                                              ],
-                                            ),
-                                          ),
-                                          child: new FlatButton(
-                                              // color: Colors.orange[600],
-                                              onPressed: () {
-                                                Navigator.of(context).pop(true);
-                                                print("exit");
-                                              },
-                                              child: const Text(
-                                                "Ok",
-                                                style: TextStyle(
-                                                    color: Colors.white),
-                                              )),
+                                        padding: const EdgeInsets.only(
+                                            right: 13, bottom: 5),
+                                        child: FlatButton(
+                                          color: kPrimaryDarkColor,
+                                          textColor: Colors.white,
+                                          onPressed: () {
+                                            Navigator.pop(context, null);
+                                          },
+                                          child: Text('Select'),
                                         ),
                                       ),
-
-                                      // FlatButton(
-                                      //   onPressed: () {
-                                      //     Navigator.pop(context, null);
-                                      //   },
-                                      //   child: Text('CANCEL'),
-                                      // ),
-                                      // FlatButton(
-                                      //   onPressed: () {
-                                      //     Navigator.pop(context, ringTone[_currentIndex]);
-                                      //   },
-                                      //   child: Text('OK'),
-                                      // ),
                                     ],
                                     content: Container(
                                       width: size.width * (18 / 20),
-                                      height: 280,
+                                      // height: size.height * 0.,
                                       child: ListView.builder(
                                         shrinkWrap: true,
                                         itemCount: _allUsers.length,
@@ -510,7 +455,6 @@ class _NewScheduleState extends State<NewSchedule> {
                               );
                             });
                       }),
-                  //SwitchScheduled(),
                   ListTile(
                     title: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -528,7 +472,6 @@ class _NewScheduleState extends State<NewSchedule> {
                           isSwitched = value;
                           print(isSwitched);
                           if (value == true) {
-                            //_awaitReturnValueFromSecondScreen(context);
                             Navigator.push(
                               context,
                               MaterialPageRoute(
@@ -540,81 +483,6 @@ class _NewScheduleState extends State<NewSchedule> {
                       activeColor: Colors.blue,
                     ),
                   ),
-
-                  // SwitchFacebook(),
-                  // SwitchTwitter(),
-                  // SwitchTumblr(),
-                  SizedBox(height: 2),
-                  // ListTile(
-                  //   title: new Text('Facebook'),
-                  //   trailing: CupertinoSwitch(
-                  //     value: isSwitchedfb,
-                  //     onChanged: (value) {
-                  //       setState(() {
-                  //         isSwitchedfb = value;
-                  //         print(isSwitchedfb);
-                  //         if (value == true) {
-                  //           //_awaitReturnValueFromSecondScreen(context);
-                  //         }
-                  //       });
-                  //     },
-                  //     activeColor: Colors.blue,
-                  //   ),
-                  // ),
-                  // SizedBox(height: 2),
-                  // ListTile(
-                  //   title: new Text('Twitter'),
-                  //   trailing: CupertinoSwitch(
-                  //     value: isSwitchedtwitter,
-                  //     onChanged: (value) {
-                  //       setState(() {
-                  //         isSwitchedtwitter = value;
-                  //         print(isSwitchedtwitter);
-                  //         if (value == true) {
-                  //           //_awaitReturnValueFromSecondScreen(context);
-                  //         }
-                  //       });
-                  //     },
-                  //     activeColor: Colors.blue,
-                  //   ),
-                  // ),
-                  SizedBox(height: 5.0),
-                  // Padding(
-                  //   padding: EdgeInsets.symmetric(
-                  //     horizontal: size.width * (1 / 20),
-                  //   ),
-                  //   child: GestureDetector(
-                  //     onTap: () {
-                  //       Navigator.push(
-                  //         context,
-                  //         MaterialPageRoute(
-                  //           builder: (context) {
-                  //             return PaymentPlan();
-                  //           },
-                  //         ),
-                  //       );
-                  //     },
-                  //     child: Row(
-                  //       children: [
-                  //         Text("Advanced Setting",
-                  //             style: TextStyle(
-                  //               fontSize: 12,
-                  //               color: Colors.grey,
-                  //             )),
-                  //         Icon(Icons.keyboard_arrow_right),
-                  //       ],
-                  //     ),
-                  //   ),
-                  // ),
-                  // ListTile(
-                  //   title: new Text('Select Page'),
-                  //   trailing: new Icon(Icons.keyboard_arrow_right),
-                  //   onTap: () {
-                  //     print("Select Page Dialog Clicked........!");
-                  //     //_selectPage();
-                  //   },
-                  // ),
-                  SizedBox(height: 50),
                 ],
               ),
             ),
@@ -623,26 +491,4 @@ class _NewScheduleState extends State<NewSchedule> {
       ),
     );
   }
-
-//   void _awaitReturnValueFromSecondScreen(BuildContext context) async {
-//     // start the SecondScreen and wait for it to finish with a result
-//     final result = await Navigator.push(
-//         context,
-//         MaterialPageRoute(
-//           builder: (context) => Home(),
-//         ));
-
-//     // after the SecondScreen result comes back update the Text widget with it
-//     setState(() {
-//       text = result;
-//       print(text);
-//     });
-//   }
-//   @override
-//   void debugFillProperties(DiagnosticPropertiesBuilder properties) {
-//     super.debugFillProperties(properties);
-//     properties.add(DiagnosticsProperty<File>('_image', _image));
-//   }
-// }
-
 }
