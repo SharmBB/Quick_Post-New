@@ -1,29 +1,12 @@
-import 'dart:convert';
 import 'dart:io';
-
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/rendering.dart';
-import 'package:fluttertoast/fluttertoast.dart';
-
 import 'package:image_picker/image_picker.dart';
 import 'package:multi_image_picker2/multi_image_picker2.dart';
 import 'package:post/home/home.dart';
-import 'package:post/schedules/Scheduler/calendar%20copy.dart';
-
 import 'package:post/schedules/scheduler/calendar.dart';
-import 'package:post/schedules/paymentPlan.dart';
-import 'package:post/schedules/upcoming_schedule.dart';
-
 import 'package:post/utils/constants.dart';
-
-import 'package:http/http.dart' as http;
-
 import 'package:flutter/material.dart';
-import 'package:dio/dio.dart' as dio;
-import 'package:post/utils/constants.dart';
-import 'package:shared_preferences/shared_preferences.dart';
-
-import 'package:path/path.dart' as Path;
 
 //const AD_ACCOUNT_ID = '1814755458831738';
 //const ACCESS_TOKEN =
@@ -66,35 +49,12 @@ class _NewScheduleState extends State<NewSchedule> {
   // Single Image Picker - From Camera / Gallery
 
   File? _image;
-  String? _uploadedFileURL;
 
   final List<Map<String, dynamic>> _allUsers = [
     {"id": 1, "name": "Andy", "age": 29},
     {"id": 2, "name": "Aragon", "age": 40},
     {"id": 3, "name": "Bob", "age": 5}
   ];
-
-  // _imgFromCamera() async {
-  //   PickedFile? image = await ImagePicker()
-  //       .getImage(source: ImageSource.camera, imageQuality: 50);
-
-  //   setState(() {
-  //     _image = image;
-  //     //uploadFile();
-  //   });
-  // }
-
-  // _imgFromGallery() async {
-  //   File image = (await ImagePicker.pickImage(
-  //       source: ImageSource.gallery, imageQuality: 50));
-
-  //   setState(() {
-  //     _image = image;
-  //     // uploadFile();
-  //     print("image picker name : ...................");
-  //     print(_image);
-  //   });
-  // }
 
   _getFromCamera() async {
     PickedFile? pickedFile = await ImagePicker()
@@ -160,102 +120,6 @@ class _NewScheduleState extends State<NewSchedule> {
         });
   }
 
-// multi image picker
-  List<Asset> images = [];
-  String? _error = 'Pick your images';
-
-  Widget buildGridView() {
-    return Row(
-      mainAxisSize: MainAxisSize.min,
-      children: [
-        SizedBox(
-          width: 15,
-        ),
-        FloatingActionButton(
-          splashColor: Colors.transparent,
-          backgroundColor: Colors.transparent,
-          elevation: 0,
-          onPressed: () {
-            loadAssets();
-          },
-          child: Container(
-            decoration: const BoxDecoration(
-              borderRadius: BorderRadius.all(Radius.circular(100.0)),
-              gradient: LinearGradient(
-                begin: Alignment.bottomRight,
-                end: Alignment.topLeft,
-                // stops: [0.3, 0.3, 0.7, 0.1, 1],
-                colors: [
-                  Color(0xFFFFE0B2),
-                  Color(0xFFFFB74D),
-                  Color(0xFFE040FB),
-                  Color(0xFFBA68C8),
-                  Color(0xFF7E57C2),
-                ],
-              ),
-            ),
-            padding: const EdgeInsets.all(13.0),
-            child: Icon(
-              Icons.camera_alt,
-              size: 26.0,
-              color: Colors.white,
-            ),
-          ),
-        ),
-        SizedBox(
-          width: 15,
-        ),
-        Flexible(
-          child: GridView.count(
-            scrollDirection: Axis.horizontal,
-            crossAxisCount: 1,
-            children: List.generate(images.length, (index) {
-              Asset asset = images[index];
-              return Padding(
-                padding: const EdgeInsets.all(4.0),
-                child: AssetThumb(
-                  asset: asset,
-                  width: 700,
-                  height: 700,
-                ),
-              );
-            }),
-          ),
-        ),
-      ],
-    );
-  }
-
-  Future<void> loadAssets() async {
-    List<Asset> resultList = [];
-    String error = 'No Error Dectected';
-
-    try {
-      resultList = await MultiImagePicker.pickImages(
-        maxImages: 10,
-        enableCamera: true,
-        selectedAssets: images,
-        cupertinoOptions: CupertinoOptions(takePhotoIcon: "chat"),
-        materialOptions: MaterialOptions(
-          // actionBarColor: "#B200B5",
-          actionBarTitle: "Quick Post",
-          allViewTitle: "All Photos",
-          useDetailsView: false,
-          selectCircleStrokeColor: "#000000",
-        ),
-      );
-    } on Exception catch (e) {
-      error = e.toString();
-    }
-
-    if (!mounted) return;
-
-    setState(() {
-      images = resultList;
-      _error = error;
-    });
-  }
-
   @override
   Widget build(BuildContext context) {
     var ola = DateTime.now();
@@ -287,9 +151,7 @@ class _NewScheduleState extends State<NewSchedule> {
                 print(ola);
                 description = myTextController.text;
                 //createCampaign(description);
-
                 print(myTextController.text);
-                
               },
               child: Text(
                 "Post",
@@ -350,9 +212,6 @@ class _NewScheduleState extends State<NewSchedule> {
               height: 10,
             ),
             Container(
-              //     padding: EdgeInsets.symmetric(
-              //       horizontal: size.width * (1 / 20),
-              //      ),
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
@@ -460,11 +319,6 @@ class _NewScheduleState extends State<NewSchedule> {
                           print(isSwitched);
                           if (value == true) {
                             _awaitReturnValueFromSecondScreen(context);
-                            // Navigator.push(
-                            //   context,
-                            //   MaterialPageRoute(
-                            //       builder: (context) => Calendar()),
-                            // );
                           }
                         });
                       },
@@ -481,12 +335,11 @@ class _NewScheduleState extends State<NewSchedule> {
   }
 
   void _awaitReturnValueFromSecondScreen(BuildContext context) async {
-
     // start the SecondScreen and wait for it to finish with a result
     final result = await Navigator.push(
         context,
         MaterialPageRoute(
-          builder: (context) => CalendarNew(),
+          builder: (context) => Calendar(),
         ));
 
     // after the SecondScreen result comes back update the Text widget with it
@@ -495,5 +348,4 @@ class _NewScheduleState extends State<NewSchedule> {
       print(text);
     });
   }
-  
 }
