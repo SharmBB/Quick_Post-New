@@ -8,6 +8,7 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:multi_image_picker2/multi_image_picker2.dart';
 import 'package:post/home/home.dart';
+import 'package:post/schedules/Scheduler/calendar%20copy.dart';
 
 import 'package:post/schedules/scheduler/calendar.dart';
 import 'package:post/schedules/paymentPlan.dart';
@@ -118,6 +119,9 @@ class _NewScheduleState extends State<NewSchedule> {
       setState(() {
         // _image = image;
         _image = File(pickedFile.path);
+        print(_image);
+        print('------');
+        print(pickedFile);
       });
     }
   }
@@ -285,24 +289,7 @@ class _NewScheduleState extends State<NewSchedule> {
                 //createCampaign(description);
 
                 print(myTextController.text);
-                // Navigator.push(
-                //           context,
-                //           MaterialPageRoute(
-                //             builder: (context) {
-                //               return UpComingSchedule();
-                //             },
-                //           ),
-                //         );
-
-                // var route = new MaterialPageRoute(
-                //   builder: (BuildContext context) => new Upcoming(
-                //     postdate: "${widget.date2}",
-                //     posttime: "${widget.time}",
-                //     postimage: _image.toString(),
-                //     title: myTextController.text,
-                //   ),
-                // );
-                // Navigator.of(context).push(route);
+                
               },
               child: Text(
                 "Post",
@@ -461,7 +448,7 @@ class _NewScheduleState extends State<NewSchedule> {
                         children: <Widget>[
                           new Text('Scheduled at'),
                           Text(
-                            "${widget.date}",
+                            text,
                             style: TextStyle(color: Colors.grey, fontSize: 14),
                           ),
                         ]),
@@ -472,11 +459,12 @@ class _NewScheduleState extends State<NewSchedule> {
                           isSwitched = value;
                           print(isSwitched);
                           if (value == true) {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) => Calendar()),
-                            );
+                            _awaitReturnValueFromSecondScreen(context);
+                            // Navigator.push(
+                            //   context,
+                            //   MaterialPageRoute(
+                            //       builder: (context) => Calendar()),
+                            // );
                           }
                         });
                       },
@@ -491,4 +479,21 @@ class _NewScheduleState extends State<NewSchedule> {
       ),
     );
   }
+
+  void _awaitReturnValueFromSecondScreen(BuildContext context) async {
+
+    // start the SecondScreen and wait for it to finish with a result
+    final result = await Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) => CalendarNew(),
+        ));
+
+    // after the SecondScreen result comes back update the Text widget with it
+    setState(() {
+      text = result;
+      print(text);
+    });
+  }
+  
 }

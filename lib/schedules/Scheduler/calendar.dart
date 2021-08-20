@@ -6,6 +6,7 @@ import 'package:post/schedules/scheduler/button_widget.dart';
 import 'package:post/schedules/scheduler/event.dart';
 import 'package:post/schedules/scheduler/utils.dart';
 import 'package:post/schedules/new_schedule.dart';
+import 'package:post/utils/constants.dart';
 
 import 'package:table_calendar/table_calendar.dart';
 
@@ -97,59 +98,17 @@ class _CalendarState extends State<Calendar> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        leading: Row(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            mainAxisAlignment: MainAxisAlignment.start,
-            children: <Widget>[
-              IconButton(
-                icon:
-                    Icon(Icons.arrow_back_ios_new_rounded, color: Colors.blue),
-                onPressed: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                        builder: (context) => NewSchedule(
-                            title: "", date: "", date2: "", time: "")),
-                  );
-                },
-              ),
-              Text(
-                "Back",
-                textAlign: TextAlign.right,
-                style: TextStyle(fontSize: 18, color: Colors.blue),
-              ),
-            ]),
-        leadingWidth: 100,
+        leading: IconButton(
+          icon: Icon(Icons.arrow_back_ios, color: Colors.black),
+          onPressed: () => 
+          // Navigator.of(context).pop(),
+          _sendDataBack(context)
+        ), 
         centerTitle: true,
-        title: Text(
-          'Calendar',
-          style: TextStyle(
-              color: Colors.black, fontSize: 20.0, fontWeight: FontWeight.bold),
-        ),
-        actions: [
-          Padding(
-              padding: const EdgeInsets.only(right: 30.0),
-              child: TextButton(
-                onPressed: () {
-                  var route = new MaterialPageRoute(
-                    builder: (BuildContext context) => new NewSchedule(
-                      date: _viewdate.toString(),
-                      date2: _viewdate.toString(),
-                      time: _viewtime.toString(),
-                      title: '',
-                    ),
-                  );
-                  Navigator.of(context).push(route);
-                },
-                child: const Text(
-                  "Next",
-                  textAlign: TextAlign.right,
-                  style: TextStyle(fontSize: 18, color: Colors.blue),
-                ),
-              ))
-        ],
+        title: Text('Calendar', style: TextStyle(color: kPrimaryDarkColor, fontSize: 18),),
         backgroundColor: Colors.transparent,
-        elevation: 0,
+        automaticallyImplyLeading: false,
+        elevation: 0,     
       ),
       body: SingleChildScrollView(
           child: Column(
@@ -199,7 +158,7 @@ class _CalendarState extends State<Calendar> {
                       ],
                     ),
                     shape: BoxShape.rectangle,
-                    borderRadius: BorderRadius.circular(20.0),
+                    borderRadius: BorderRadius.circular(50.0),
                   ),
                   selectedTextStyle: TextStyle(color: Colors.white),
                   todayTextStyle: TextStyle(
@@ -271,4 +230,12 @@ class _CalendarState extends State<Calendar> {
               setState(() => this.dateTime = dateTime),
         ),
       );
+
+  void _sendDataBack(BuildContext context) {
+    String textToSendBack = "getTime".toString();
+    Navigator.pop(context, textToSendBack);
+    print("getTime");
+  }
+
+  
 }
