@@ -10,6 +10,7 @@ import 'package:post/sign_up/signup.dart';
 import 'package:post/utils/constants.dart';
 import 'package:post/utils/helper.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 
 class SelectFbPage extends StatefulWidget {
   const SelectFbPage({Key? key}) : super(key: key);
@@ -21,62 +22,113 @@ class SelectFbPage extends StatefulWidget {
 class _SelectFbPageState extends State<SelectFbPage> {
   User? user = FirebaseAuth.instance.currentUser;
   String? userId;
-  final Stream<QuerySnapshot> _usersStream = FirebaseFirestore.instance
-      .collection('usersProfile')
-      .where("accountId", isEqualTo: "userId")
-      // .where("email", isEqualTo: "shan@gmail.com")
-      .snapshots();
 
-  CollectionReference users = FirebaseFirestore.instance.collection('usersProfile');
+  var lst = [];
+
+  CollectionReference users =
+      FirebaseFirestore.instance.collection('usersProfile');
   late Query query;
 
-  Future<void> addUser(firstName, lastName, email, accountId) {
-    return users
-        .add({
-          'firstName': firstName,
-          'lastName': lastName,
-          'email': email,
-          'accountId': accountId,
-          'boolean': "1",
-          'tick': false
-        })
-        .then((value) => print("User Added"))
-        .catchError((error) => print("Failed to add user: $error"));
+  void getData() {
+    Query profiles = users.where("userId", isEqualTo: user!.uid);
+
+    profiles.snapshots().forEach((element) {
+      var len = element.docs.length;
+      for (int i = 0; i < len; i++) {
+        lst.add(element.docs[i]['accountId']);
+      }
+    });
   }
 
+  void addUser(firstName, lastName, email, userId, accountId) {
+    bool account = false;
+    lst.forEach((element) {
+      if (element == accountId) {
+        account = true;
+      }
+    });
+
+    //checking the already available account
+    if (account) {
+      Fluttertoast.showToast(
+          msg: 'Account Already Available!',
+          toastLength: Toast.LENGTH_SHORT,
+          gravity: ToastGravity.TOP,
+          timeInSecForIosWeb: 3,
+          backgroundColor: Colors.blueGrey,
+          textColor: Colors.white);
+    } else {
+      users
+          .add({
+            'firstName': firstName,
+            'lastName': lastName,
+            'email': email,
+            'userId': userId,
+            'boolean': "1",
+            'tick': false,
+            'accountId': accountId
+          })
+          .then((value) => Fluttertoast.showToast(
+              msg: 'Account Added Successfully',
+              toastLength: Toast.LENGTH_SHORT,
+              gravity: ToastGravity.TOP,
+              timeInSecForIosWeb: 3,
+              backgroundColor: Colors.blueGrey,
+              textColor: Colors.white))
+          .catchError((error) => Fluttertoast.showToast(
+              msg: 'Something Went Wrong',
+              toastLength: Toast.LENGTH_SHORT,
+              gravity: ToastGravity.TOP,
+              timeInSecForIosWeb: 3,
+              backgroundColor: Colors.blueGrey,
+              textColor: Colors.white));
+    }
+  }
+
+//deleting facebook profile
+  void deleteProfile(docId) {
+    users
+        .doc(docId)
+        .delete()
+        .then((value) => Fluttertoast.showToast(
+            msg: 'Account Deleted Successfully',
+            toastLength: Toast.LENGTH_SHORT,
+            gravity: ToastGravity.TOP,
+            timeInSecForIosWeb: 3,
+            backgroundColor: Colors.blueGrey,
+            textColor: Colors.white))
+        .catchError((error) => Fluttertoast.showToast(
+            msg: 'Something Went Wrong',
+            toastLength: Toast.LENGTH_SHORT,
+            gravity: ToastGravity.TOP,
+            timeInSecForIosWeb: 3,
+            backgroundColor: Colors.blueGrey,
+            textColor: Colors.white));
+  }
+
+  //defining facebook SDK
   final fbLogin = FacebookLogin();
+
+  //facebook auth
   Future signInFB() async {
     final FacebookLoginResult result = await fbLogin.logIn(["email"]);
     final String token = result.accessToken.token;
     final response = await http.get(Uri.parse(
         'https://graph.facebook.com/v2.12/me?fields=name,first_name,last_name,email&access_token=${token}'));
     final profile = jsonDecode(response.body);
-    print(profile['first_name']);
+    //print(profile['first_name']);
     addUser(profile['first_name'], profile['last_name'], profile['email'],
-        profile['id']);
+        user!.uid, profile['id']);
     return profile;
   }
 
   @override
   void initState() {
-    Query profiles = users.where("accountId", isEqualTo: user!.uid);
+    Query profiles = users.where("userId", isEqualTo: user!.uid);
     query = profiles;
+    getData();
     super.initState();
   }
-
-  // Future<void> addUser() {
-  //   return users
-  //       .add({
-  //         'accountId': "863939667880707",
-  //         'firstName': "Shan",
-  //         'lastName': "jathu",
-  //         'email': "shan@gmail.com",
-  //         'boolean': "1",
-  //         'tick': false
-  //       })
-  //       .then((value) => print("User Added"))
-  //       .catchError((error) => print("Failed to add user: $error"));
-  // }
 
   @override
   Widget build(BuildContext context) {
@@ -125,9 +177,11 @@ class _SelectFbPageState extends State<SelectFbPage> {
                               padding: const EdgeInsets.symmetric(
                                   vertical: 0, horizontal: 10),
                               child: ProfileCard(
-                                name: data['profileName'],
+                                name: data['firstName'],
                                 boolean: data['tick'],
-                                deleteOnTap: () {},
+                                deleteOnTap: () {
+                                  deleteProfile(data.id);
+                                },
                                 src:
                                     'https://moodforcode.com/assets/images/moodforcode.jpg',
                               ),
@@ -141,7 +195,7 @@ class _SelectFbPageState extends State<SelectFbPage> {
               ),
             ),
             FlatButton(
-              onPressed: () async{
+              onPressed: () async {
                 // pushReplacement(context, Signin());
                 await FirebaseAuth.instance.signOut();
                 SharedPreferences prefs = await SharedPreferences.getInstance();

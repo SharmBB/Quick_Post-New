@@ -18,9 +18,9 @@ class Fbpage extends StatefulWidget {
 class _upcomingState extends State<Fbpage> {
   @override
   Widget build(BuildContext context) {
-    
     Future<void> addUser(firstName, lastName, email, accountId) {
-      CollectionReference users = FirebaseFirestore.instance.collection('usersProfile');
+      CollectionReference users =
+          FirebaseFirestore.instance.collection('usersProfile');
       return users
           .add({
             'firstName': firstName,
@@ -40,7 +40,7 @@ class _upcomingState extends State<Fbpage> {
       final response = await http.get(Uri.parse(
           'https://graph.facebook.com/v2.12/me?fields=name,first_name,last_name,email&access_token=${token}'));
       final profile = jsonDecode(response.body);
-      print(profile['first_name']);
+      //print(profile['first_name']);
       addUser(profile['first_name'], profile['last_name'], profile['email'],
           profile['id']);
       return profile;
@@ -61,7 +61,6 @@ class _upcomingState extends State<Fbpage> {
         padding: const EdgeInsets.only(top: 25.0, left: 25.0),
         child: Container(
           child: Column(children: [
-            
             Center(
               child: SignInButtonBuilder(
                 text: "Sign in with Facebook",
@@ -81,6 +80,7 @@ class _upcomingState extends State<Fbpage> {
     );
   }
 }
+
 //  mainAxisAlignment: MainAxisAlignment.center,
 //                 children: <Widget>[
 //                   FacebookSignInButton(
