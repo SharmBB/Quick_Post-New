@@ -86,7 +86,7 @@ class _SelectFbPageState extends State<SelectFbPage> {
   }
 
 //deleting facebook profile
-  void deleteProfile(docId) {
+  void deleteProfile(docId, accountId) {
     users
         .doc(docId)
         .delete()
@@ -97,6 +97,55 @@ class _SelectFbPageState extends State<SelectFbPage> {
             timeInSecForIosWeb: 3,
             backgroundColor: Colors.blueGrey,
             textColor: Colors.white))
+        .catchError((error) => Fluttertoast.showToast(
+            msg: 'Something Went Wrong',
+            toastLength: Toast.LENGTH_SHORT,
+            gravity: ToastGravity.TOP,
+            timeInSecForIosWeb: 3,
+            backgroundColor: Colors.blueGrey,
+            textColor: Colors.white));
+    lst.remove(accountId);
+  }
+
+  void addTick(String docId, String accountId, String accountName, String email,
+      String userId) {
+    users
+        .doc(docId)
+        .update({
+          'accountId': accountId,
+          'accountName': accountName,
+          'email': email,
+          'tick': true,
+          'userId': userId
+        })
+        .then((value) => Fluttertoast.showToast(
+            msg: 'Account Selected Successfully',
+            toastLength: Toast.LENGTH_SHORT,
+            gravity: ToastGravity.TOP,
+            timeInSecForIosWeb: 3,
+            backgroundColor: Colors.blueGrey,
+            textColor: Colors.white))
+        .catchError((error) => Fluttertoast.showToast(
+            msg: 'Something Went Wrong',
+            toastLength: Toast.LENGTH_SHORT,
+            gravity: ToastGravity.TOP,
+            timeInSecForIosWeb: 3,
+            backgroundColor: Colors.blueGrey,
+            textColor: Colors.white));
+  }
+
+  void removeTick(String docId, String accountId, String accountName,
+      String email, String userId) {
+    users
+        .doc(docId)
+        .update({
+          'accountId': accountId,
+          'accountName': accountName,
+          'email': email,
+          'tick': false,
+          'userId': userId
+        })
+        .then((value) => print("Account Dis Selected"))
         .catchError((error) => Fluttertoast.showToast(
             msg: 'Something Went Wrong',
             toastLength: Toast.LENGTH_SHORT,
@@ -169,7 +218,18 @@ class _SelectFbPageState extends State<SelectFbPage> {
                         highlightColor: Colors.transparent,
                         splashColor: Colors.transparent,
                         onTap: () {
-                          print(index);
+                          //print(index);
+                          snapshot.data!.docs.forEach((element) =>
+                              element['tick'] == true
+                                  ? removeTick(
+                                      element.id,
+                                      element['accountId'],
+                                      element['firstName'],
+                                      element['email'],
+                                      element['userId'])
+                                  : print("no"));
+                          addTick(data.id, data['accountId'], data['firstName'],
+                              data['email'], data['userId']);
                         },
                         child: Column(
                           children: [
@@ -180,7 +240,7 @@ class _SelectFbPageState extends State<SelectFbPage> {
                                 name: data['firstName'],
                                 boolean: data['tick'],
                                 deleteOnTap: () {
-                                  deleteProfile(data.id);
+                                  deleteProfile(data.id, data['accountId']);
                                 },
                                 src:
                                     'https://moodforcode.com/assets/images/moodforcode.jpg',
