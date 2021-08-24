@@ -1,12 +1,19 @@
+import 'dart:convert';
 import 'dart:io';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/rendering.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:multi_image_picker2/multi_image_picker2.dart';
+import 'package:http/http.dart' as http;
 import 'package:post/home/home.dart';
 import 'package:post/schedules/scheduler/calendar.dart';
 import 'package:post/utils/constants.dart';
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_storage/firebase_storage.dart';
+import 'package:dio/dio.dart' as dio;
 
 //const AD_ACCOUNT_ID = '1814755458831738';
 //const ACCESS_TOKEN =
@@ -49,12 +56,9 @@ class _NewScheduleState extends State<NewSchedule> {
   // Single Image Picker - From Camera / Gallery
 
   File? _image;
+  String? _uploadedFileURL;
 
-  final List<Map<String, dynamic>> _allUsers = [
-    {"id": 1, "name": "Andy", "age": 29},
-    {"id": 2, "name": "Aragon", "age": 40},
-    {"id": 3, "name": "Bob", "age": 5}
-  ];
+  final List<Map<String, dynamic>> _allUsers = [];
 
   _getFromCamera() async {
     PickedFile? pickedFile = await ImagePicker()
@@ -65,6 +69,7 @@ class _NewScheduleState extends State<NewSchedule> {
     if (pickedFile != null) {
       setState(() {
         _image = File(pickedFile.path);
+        uploadFile();
       });
     }
   }
@@ -82,8 +87,21 @@ class _NewScheduleState extends State<NewSchedule> {
         print(_image);
         print('------');
         print(pickedFile);
+        uploadFile();
       });
     }
+  }
+
+  Future uploadFile() async {
+    FirebaseStorage storage = FirebaseStorage.instance;
+    Reference ref = storage.ref().child("image1" + DateTime.now().toString());
+    UploadTask uploadTask = ref.putFile(_image!);
+    uploadTask.then((res) {
+      setState(() {
+        _uploadedFileURL = res.ref.getDownloadURL() as String?;
+        print(_uploadedFileURL);
+      });
+    });
   }
 
   void _showPicker(context) {
@@ -120,6 +138,109 @@ class _NewScheduleState extends State<NewSchedule> {
         });
   }
 
+  Future<void> createCampaign(String name) async {
+    try {
+      await uploadFile();
+      SharedPreferences prefs = await SharedPreferences.getInstance();
+
+      final userId = prefs.getString('userId');
+      final AD_ACCOUNT_ID = prefs.getString('pageId');
+
+      final accountId = prefs.getString('accountId');
+      final ACCESS_TOKEN = prefs.getString('pageToken');
+      String? selectedTime = prefs.getString('selectedTime');
+      String finalDateTime =
+          text.substring(0, 10) + " " + selectedTime!.substring(1, 6);
+
+      var dateTime = DateTime.parse(finalDateTime);
+      print("Local " + dateTime.toString());
+      print("UTC " + dateTime.toUtc().toString());
+      //var parsedDate = DateFormat("yyyy-MM-dd HH:mm:ss").format(dateTime);
+      int fbTime = (dateTime.toUtc().millisecondsSinceEpoch / 1000).round();
+      print(fbTime);
+      //print(userId);
+
+      if (AD_ACCOUNT_ID == null) {
+        Fluttertoast.showToast(
+            msg: 'No Page Selected',
+            toastLength: Toast.LENGTH_SHORT,
+            gravity: ToastGravity.TOP,
+            timeInSecForIosWeb: 3,
+            backgroundColor: Colors.blueGrey,
+            textColor: Colors.white);
+        return;
+      }
+
+      final formData = dio.FormData.fromMap({
+        "published": "false",
+        "scheduled_publish_time": fbTime,
+        "a": name,
+        "url": _uploadedFileURL,
+        "access_token": ACCESS_TOKEN
+      });
+
+      final response = await dio.Dio().post(
+        'https://graph.facebook.com/v9.0/$AD_ACCOUNT_ID/photos',
+        data: formData,
+      );
+      final profile = jsonDecode(response.data);
+      print(profile);
+      print(_uploadedFileURL);
+      Fluttertoast.showToast(
+          msg: 'Post sheduled Successfully!',
+          toastLength: Toast.LENGTH_SHORT,
+          gravity: ToastGravity.TOP,
+          timeInSecForIosWeb: 3,
+          backgroundColor: Colors.blueGrey,
+          textColor: Colors.white);
+
+      ///addPosts(userId,accountId,dateTime,name,AD_ACCOUNT_ID,_uploadedFileURL);
+    } on Exception catch (e) {
+      print(e);
+    }
+    //ignore: dead_code_on_catch_subtype
+    on dio.DioError {
+      throw Exception('Failed to create Campaign.');
+    }
+  }
+
+  Future<void> getAllAvailablePages() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    final accountId = prefs.getString('accountId');
+    final accessToken = prefs.getString('userToken');
+
+    if (accountId == null) {
+      Fluttertoast.showToast(
+          msg: 'Select An Account First',
+          toastLength: Toast.LENGTH_SHORT,
+          gravity: ToastGravity.TOP,
+          timeInSecForIosWeb: 3,
+          backgroundColor: Colors.blueGrey,
+          textColor: Colors.white);
+    }
+    // radio button dialog
+    //List<String> ringTone = [];
+    final responsePage = await http.get(Uri.parse(
+        'https://graph.facebook.com/v9.0/$accountId/accounts?fields=id,name,access_token& access_token=${accessToken}'));
+    final page = jsonDecode(responsePage.body);
+    //print(accountId);
+    //print("accessToken");
+    //print(accessToken);
+    //print(page);
+
+    for (var i = 0; i < page['data'].length; i++) {
+      _allUsers.add(page['data'][i]);
+    }
+
+    print(_allUsers);
+  }
+
+  @override
+  void initState() {
+    getAllAvailablePages();
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     var ola = DateTime.now();
@@ -150,7 +271,8 @@ class _NewScheduleState extends State<NewSchedule> {
               onTap: () {
                 print(ola);
                 description = myTextController.text;
-                //createCampaign(description);
+                createCampaign(description);
+                //createCampaign
                 print(myTextController.text);
               },
               child: Text(

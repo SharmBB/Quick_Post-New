@@ -40,7 +40,7 @@ class _SelectFbPageState extends State<SelectFbPage> {
     });
   }
 
-  void addUser(firstName, lastName, email, userId, accountId) {
+  void addUser(firstName, lastName, email, userId, accountId, shortToken) {
     bool account = false;
     lst.forEach((element) {
       if (element == accountId) {
@@ -66,7 +66,8 @@ class _SelectFbPageState extends State<SelectFbPage> {
             'userId': userId,
             'boolean': "1",
             'tick': false,
-            'accountId': accountId
+            'accountId': accountId,
+            'shortToken': shortToken
           })
           .then((value) => Fluttertoast.showToast(
               msg: 'Account Added Successfully',
@@ -107,8 +108,8 @@ class _SelectFbPageState extends State<SelectFbPage> {
     lst.remove(accountId);
   }
 
-  void addTick(String docId, String accountId, String accountName, String email,
-      String userId) {
+  Future<void> addTick(String docId, String accountId, String accountName,
+      String email, String userId, String shortToken) async {
     users
         .doc(docId)
         .update({
@@ -116,7 +117,8 @@ class _SelectFbPageState extends State<SelectFbPage> {
           'accountName': accountName,
           'email': email,
           'tick': true,
-          'userId': userId
+          'userId': userId,
+          'shortToken': shortToken,
         })
         .then((value) => Fluttertoast.showToast(
             msg: 'Account Selected Successfully',
@@ -132,10 +134,14 @@ class _SelectFbPageState extends State<SelectFbPage> {
             timeInSecForIosWeb: 3,
             backgroundColor: Colors.blueGrey,
             textColor: Colors.white));
+
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    prefs.setString('accountId', accountId);
+    prefs.setString('userToken', shortToken);
   }
 
   void removeTick(String docId, String accountId, String accountName,
-      String email, String userId) {
+      String email, String userId, String shortToken) {
     users
         .doc(docId)
         .update({
@@ -143,7 +149,8 @@ class _SelectFbPageState extends State<SelectFbPage> {
           'accountName': accountName,
           'email': email,
           'tick': false,
-          'userId': userId
+          'userId': userId,
+          'shortToken': shortToken
         })
         .then((value) => print("Account Dis Selected"))
         .catchError((error) => Fluttertoast.showToast(
@@ -165,9 +172,9 @@ class _SelectFbPageState extends State<SelectFbPage> {
     final response = await http.get(Uri.parse(
         'https://graph.facebook.com/v2.12/me?fields=name,first_name,last_name,email&access_token=${token}'));
     final profile = jsonDecode(response.body);
-    //print(profile['first_name']);
+    print(profile);
     addUser(profile['first_name'], profile['last_name'], profile['email'],
-        user!.uid, profile['id']);
+        user!.uid, profile['id'], token);
     return profile;
   }
 
@@ -226,10 +233,16 @@ class _SelectFbPageState extends State<SelectFbPage> {
                                       element['accountId'],
                                       element['firstName'],
                                       element['email'],
-                                      element['userId'])
+                                      element['userId'],
+                                      element['shortToken'])
                                   : print("no"));
-                          addTick(data.id, data['accountId'], data['firstName'],
-                              data['email'], data['userId']);
+                          addTick(
+                              data.id,
+                              data['accountId'],
+                              data['firstName'],
+                              data['email'],
+                              data['userId'],
+                              data['shortToken']);
                         },
                         child: Column(
                           children: [
