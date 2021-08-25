@@ -44,7 +44,10 @@ class _NewScheduleState extends State<NewSchedule> {
   bool isSwitchedfb = false;
   bool isSwitchedtwitter = false;
   String text = "";
+  String selectedTime = "";
   String description = "";
+  String pageId = "";
+  String pageToken = "";
   var _currentIndex = 1;
 
   @override
@@ -57,6 +60,7 @@ class _NewScheduleState extends State<NewSchedule> {
 
   File? _image;
   String? _uploadedFileURL;
+  late Future<String> fileurl;
 
   final List<Map<String, dynamic>> _allUsers = [];
 
@@ -92,14 +96,14 @@ class _NewScheduleState extends State<NewSchedule> {
     }
   }
 
-  Future uploadFile() async {
+  Future<void> uploadFile() async {
     FirebaseStorage storage = FirebaseStorage.instance;
     Reference ref = storage.ref().child("image1" + DateTime.now().toString());
     UploadTask uploadTask = ref.putFile(_image!);
     uploadTask.then((res) {
       setState(() {
-        _uploadedFileURL = res.ref.getDownloadURL() as String?;
-        print(_uploadedFileURL);
+        fileurl = res.ref.getDownloadURL();
+        //print(_uploadedFileURL);
       });
     });
   }
@@ -140,27 +144,28 @@ class _NewScheduleState extends State<NewSchedule> {
 
   Future<void> createCampaign(String name) async {
     try {
-      await uploadFile();
-      SharedPreferences prefs = await SharedPreferences.getInstance();
+      //await uploadFile();
 
+      SharedPreferences prefs = await SharedPreferences.getInstance();
+      _uploadedFileURL = await fileurl;
       final userId = prefs.getString('userId');
       final AD_ACCOUNT_ID = prefs.getString('pageId');
 
       final accountId = prefs.getString('accountId');
       final ACCESS_TOKEN = prefs.getString('pageToken');
-      String? selectedTime = prefs.getString('selectedTime');
-      String finalDateTime =
-          text.substring(0, 10) + " " + selectedTime!.substring(1, 6);
-
+      //String? selectedTime = prefs.getString('selectedTime');
+      //print(selectedTime.substring(10));
+      String finalDateTime = selectedTime.substring(0, 19);
+      //print(finalDateTime);
       var dateTime = DateTime.parse(finalDateTime);
-      print("Local " + dateTime.toString());
-      print("UTC " + dateTime.toUtc().toString());
+      //print("Local " + dateTime.toString());
+      //print("UTC " + dateTime.toUtc().toString());
       //var parsedDate = DateFormat("yyyy-MM-dd HH:mm:ss").format(dateTime);
       int fbTime = (dateTime.toUtc().millisecondsSinceEpoch / 1000).round();
       print(fbTime);
-      //print(userId);
+      // //print(userId);
 
-      if (AD_ACCOUNT_ID == null) {
+      if (pageId == "") {
         Fluttertoast.showToast(
             msg: 'No Page Selected',
             toastLength: Toast.LENGTH_SHORT,
@@ -174,13 +179,14 @@ class _NewScheduleState extends State<NewSchedule> {
       final formData = dio.FormData.fromMap({
         "published": "false",
         "scheduled_publish_time": fbTime,
-        "a": name,
+        "message": name,
         "url": _uploadedFileURL,
-        "access_token": ACCESS_TOKEN
+        "access_token": pageToken
       });
+      print(formData);
 
       final response = await dio.Dio().post(
-        'https://graph.facebook.com/v9.0/$AD_ACCOUNT_ID/photos',
+        'https://graph.facebook.com/v9.0/$pageId/photos',
         data: formData,
       );
       final profile = jsonDecode(response.data);
@@ -405,13 +411,16 @@ class _NewScheduleState extends State<NewSchedule> {
                                             onChanged: (val) {
                                               setState(() {
                                                 _currentIndex = index;
+                                                pageId = _allUsers[index]["id"];
+                                                pageToken = _allUsers[index]
+                                                    ["access_token"];
                                                 //   final pageShortToken = page['data'][_currentIndex]['access_token'];
                                                 //   final pageId = page['data'][_currentIndex]['id'];
                                                 //   print(page['data'][_currentIndex]['name']);
-                                                //   prefs.setString('pageId', pageId);
-                                                //   prefs.setString('pageToken', pageShortToken);
-                                                print(_allUsers[index]["id"]);
-                                                print(val);
+                                                //prefs.setString('pageId', pageId);
+                                                //prefs.setString('pageToken',pageShortToken);
+                                                //print(_allUsers[index]["id"]);
+                                                //print(val);
                                               });
                                             },
                                           );
@@ -438,7 +447,7 @@ class _NewScheduleState extends State<NewSchedule> {
                       onChanged: (value) {
                         setState(() {
                           isSwitched = value;
-                          print(isSwitched);
+                          //print(isSwitched);
                           if (value == true) {
                             _awaitReturnValueFromSecondScreen(context);
                           }
@@ -466,8 +475,9 @@ class _NewScheduleState extends State<NewSchedule> {
 
     // after the SecondScreen result comes back update the Text widget with it
     setState(() {
-      text = result;
-      print(text);
+      //text = result;
+      selectedTime = result;
+      print(result);
     });
   }
 }
