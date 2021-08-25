@@ -439,7 +439,7 @@ class _NewScheduleState extends State<NewSchedule> {
                         children: <Widget>[
                           new Text('Scheduled at'),
                           Text(
-                            DateFormat.yMd().format(selectedText).toString() + " " + DateFormat.Hm().format(selectedText).toString(),
+                            selectedText == null ? "" : DateFormat.yMd().format(selectedText).toString() + " " + DateFormat.Hm().format(selectedText).toString(),
                             style: TextStyle(color: Colors.grey, fontSize: 14),
                           ),
                         ]),
