@@ -4,6 +4,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/rendering.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:intl/intl.dart';
 import 'package:multi_image_picker2/multi_image_picker2.dart';
 import 'package:http/http.dart' as http;
 import 'package:post/home/home.dart';
@@ -43,7 +44,7 @@ class _NewScheduleState extends State<NewSchedule> {
   bool isSwitched = false;
   bool isSwitchedfb = false;
   bool isSwitchedtwitter = false;
-  String text = "";
+  var selectedText;
   String selectedTime = "";
   String description = "";
   String pageId = "";
@@ -438,7 +439,7 @@ class _NewScheduleState extends State<NewSchedule> {
                         children: <Widget>[
                           new Text('Scheduled at'),
                           Text(
-                            text,
+                            DateFormat.yMd().format(selectedText).toString() + " " + DateFormat.Hm().format(selectedText).toString(),
                             style: TextStyle(color: Colors.grey, fontSize: 14),
                           ),
                         ]),
@@ -475,8 +476,11 @@ class _NewScheduleState extends State<NewSchedule> {
 
     // after the SecondScreen result comes back update the Text widget with it
     setState(() {
-      //text = result;
-      selectedTime = result;
+      //show the time to user
+      selectedText = result;
+      // This is for store to Firebase
+      selectedTime = result.toString();
+      print("------");
       print(result);
     });
   }

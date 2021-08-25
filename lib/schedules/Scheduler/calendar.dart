@@ -20,7 +20,7 @@ class _CalendarState extends State<Calendar> {
   CalendarFormat format = CalendarFormat.month;
   DateTime selectedDay = DateTime.now();
   String selectedDayCollection = DateTime.now().toString();
-  String getTimeCollection = DateTime.now().toString();
+  DateTime getTimeCollection = DateTime.now();
   DateTime getTime = DateTime.now().add(new Duration(minutes: 15));
 
   // DateTime dateTime = DateTime.now();
@@ -96,14 +96,14 @@ class _CalendarState extends State<Calendar> {
             // focusedDay = focusDay;
           });
           print("-------------------");
-          print(DateFormat.MMMM().format(selectedDay).toString());
+          print(DateFormat.yMd().format(selectedDay).toString());
           print("Day : " + selectedDay.day.toString());
           print("Month : " + selectedDay.month.toString());
           print("Year : " + selectedDay.year.toString());
           print(selectedDayCollection);
-          selectedDayCollection = selectedDay.day.toString() +'.'+ selectedDay.month.toString() +'.'+ selectedDay.year.toString();
+          selectedDayCollection = DateFormat.yMd().format(selectedDay).toString();
           print(selectedDayCollection);
-          // selectedDayCollection
+
           print("-------------------");
         },
         selectedDayPredicate: (DateTime date) {
@@ -215,7 +215,7 @@ class _CalendarState extends State<Calendar> {
                                     // SharedPreferences prefs = await SharedPreferences.getInstance();
                                     // prefs.setString('selectedTime','(${DateFormat.Hm().format(_dateTime)})');
                                     print(DateFormat.Hm().format(getTime));
-                                    getTimeCollection = DateFormat.Hm().format(getTime);
+                                    getTimeCollection = getTime;
                                     // getTime = '(${DateFormat.Hm().format(getTime)})';
                                   },
                                 ),
@@ -248,8 +248,19 @@ class _CalendarState extends State<Calendar> {
   }
 
   void _sendDataBack(BuildContext context) {
-    String textToSendBack = selectedDayCollection +' '+ getTimeCollection;
+    var textToSendBack = DateTime(selectedDay.year, selectedDay.month, selectedDay.day, getTimeCollection.hour, getTimeCollection.minute);
     Navigator.pop(context, textToSendBack);
-    print(getTimeCollection);
+    print("getTimeCollection");
+    print(textToSendBack);
+    // print(getTimeCollection);
+    // print(selectedDayCollection);
+
+    // final toUTC = DateTime(selectedDay.year, selectedDay.month, selectedDay.day, getTimeCollection.hour, getTimeCollection.minute);
+
+    // print(toUTC);
+    // print(DateTime.utc(selectedDay.year, selectedDay.month, selectedDay.day, getTimeCollection.hour, getTimeCollection.minute));
+    print("selectedDayCollection");
+
+
   }
 }
