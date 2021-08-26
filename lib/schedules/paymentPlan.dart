@@ -23,14 +23,14 @@ class PaymentPlanState extends State<PaymentPlan> {
   void initState() {
     super.initState();
     sampleData.add(new RadioModel(true, 'FREE', '10 post/Month', ''));
-    sampleData.add(new RadioModel(
-        false, '4.39\$/Month', '30 post/Month', '(one account)'));
-    sampleData.add(new RadioModel(
-        false, '7.39\$/Month', 'Unlimited posts/Month', '(one account)'));
-    sampleData.add(new RadioModel(
-        false, '12.39\$/Month', 'Unlimited posts/Month', '(Three account)'));
-    sampleData.add(new RadioModel(
-        false, '19.39\$/Month', 'Unlimited posts/Month', '(Five account)'));
+    // sampleData.add(new RadioModel(
+    //     false, '4.39\$/Month', '30 post/Month', '(one account)'));
+    // sampleData.add(new RadioModel(
+    //     false, '7.39\$/Month', 'Unlimited posts/Month', '(one account)'));
+    // sampleData.add(new RadioModel(
+    //     false, '12.39\$/Month', 'Unlimited posts/Month', '(Three account)'));
+    // sampleData.add(new RadioModel(
+    //     false, '19.39\$/Month', 'Unlimited posts/Month', '(Five account)'));
   }
 
   @override

@@ -538,11 +538,11 @@ class _NewScheduleState extends State<NewSchedule> {
     // after the SecondScreen result comes back update the Text widget with it
     setState(() {
       //show the time to user
-      selectedText = result;
+      selectedText = result.add(new Duration(minutes: 15));
       // This is for store to Firebase
-      selectedTime = result.toString();
+      selectedTime = result.add(new Duration(minutes: 15)).toString();
       print("------");
-      print(result);
+      print(selectedTime);
     });
   }
 }

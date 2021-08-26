@@ -17,7 +17,7 @@ class _HomeState extends State<Home> {
     PaymentPlan(),
     SelectFbPage(),
     PastSchedule(),
-    Upcoming()
+    // Upcoming()
   ];
   final PageStorageBucket bucket = PageStorageBucket();
   Widget currentScreen =
@@ -96,16 +96,16 @@ class _HomeState extends State<Home> {
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
-                IconButton(
-                  icon: Icon(Icons.calendar_today),
-                  color: currentTab == 0 ? Colors.purple : Colors.grey,
-                  onPressed: () {
-                    setState(() {
-                      currentScreen = Upcoming(); // if user taps on this dashboard tab will be active
-                      currentTab = 0;
-                    });
-                  },
-                ),
+                // IconButton(
+                //   icon: Icon(Icons.calendar_today),
+                //   color: currentTab == 0 ? Colors.purple : Colors.grey,
+                //   onPressed: () {
+                //     setState(() {
+                //       currentScreen = Upcoming(); // if user taps on this dashboard tab will be active
+                //       currentTab = 0;
+                //     });
+                //   },
+                // ),
                 IconButton(
                   icon: Icon(Icons.schedule),
                   color: currentTab == 1 ? Colors.purple : Colors.grey,
