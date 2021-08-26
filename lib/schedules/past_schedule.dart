@@ -19,9 +19,8 @@ class _PastScheduleState extends State<PastSchedule> {
 
   @override
   void initState() {
-    Query profiles = users
-        //.where("userId", isEqualTo: user!.uid)
-        .where("dateTime", isLessThan: DateTime.now());
+    Query profiles = users.where("userId", isEqualTo: user!.uid);
+    //.where("dateTime", isLessThan: DateTime.now());
     query = profiles;
     super.initState();
   }

@@ -65,6 +65,7 @@ class _NewScheduleState extends State<NewSchedule> {
   File? _image;
   String? _uploadedFileURL;
   late Future<String> fileurl;
+  bool image = false;
 
   final List<Map<String, dynamic>> _allUsers = [];
 
@@ -78,6 +79,7 @@ class _NewScheduleState extends State<NewSchedule> {
       setState(() {
         _image = File(pickedFile.path);
         uploadFile();
+        image = true;
       });
     }
   }
@@ -96,6 +98,7 @@ class _NewScheduleState extends State<NewSchedule> {
         print('------');
         print(pickedFile);
         uploadFile();
+        image = true;
       });
     }
   }
@@ -151,14 +154,38 @@ class _NewScheduleState extends State<NewSchedule> {
       //await uploadFile();
 
       SharedPreferences prefs = await SharedPreferences.getInstance();
+      if (!image) {
+        Fluttertoast.showToast(
+            msg: 'Please Select An Image',
+            toastLength: Toast.LENGTH_SHORT,
+            gravity: ToastGravity.TOP,
+            timeInSecForIosWeb: 3,
+            backgroundColor: Colors.blueGrey,
+            textColor: Colors.white);
+        return;
+      }
       _uploadedFileURL = await fileurl;
+      // ignore: unrelated_type_equality_checks
+
       final userId = prefs.getString('userId');
-      final AD_ACCOUNT_ID = prefs.getString('pageId');
+
+      ///final AD_ACCOUNT_ID = prefs.getString('pageId');
 
       final accountId = prefs.getString('accountId');
-      final ACCESS_TOKEN = prefs.getString('pageToken');
+      //final ACCESS_TOKEN = prefs.getString('pageToken');
       //String? selectedTime = prefs.getString('selectedTime');
       //print(selectedTime.substring(10));
+
+      if (selectedTime.length < 5) {
+        Fluttertoast.showToast(
+            msg: 'Please the date & time',
+            toastLength: Toast.LENGTH_SHORT,
+            gravity: ToastGravity.TOP,
+            timeInSecForIosWeb: 3,
+            backgroundColor: Colors.blueGrey,
+            textColor: Colors.white);
+        return;
+      }
       String finalDateTime = selectedTime.substring(0, 19);
       //print(finalDateTime);
       var dateTime = DateTime.parse(finalDateTime);
@@ -194,7 +221,7 @@ class _NewScheduleState extends State<NewSchedule> {
         data: formData,
       );
       final profile = jsonDecode(response.data);
-      print(profile);
+      //print(profile);
       if (profile['id'] != null) {
         Fluttertoast.showToast(
             msg: 'Post sheduled Successfully!',
@@ -213,6 +240,7 @@ class _NewScheduleState extends State<NewSchedule> {
             backgroundColor: Colors.blueGrey,
             textColor: Colors.white);
       }
+      image = false;
       //print(_uploadedFileURL);
 
     } on Exception catch (e) {
@@ -264,7 +292,7 @@ class _NewScheduleState extends State<NewSchedule> {
       _allUsers.add(page['data'][i]);
     }
 
-    print(_allUsers);
+    //print(_allUsers);
   }
 
   @override
