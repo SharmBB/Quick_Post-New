@@ -409,13 +409,13 @@ class _NewScheduleState extends State<NewSchedule> {
                       ),
                     ),
                   ),
-                  ListTile(
-                    title: new Text('Tag People'),
-                    trailing: new Icon(Icons.keyboard_arrow_right),
-                    onTap: () {
-                      print("Tag People Clicked........!");
-                    },
-                  ),
+                  // ListTile(
+                  //   title: new Text('Tag People'),
+                  //   trailing: new Icon(Icons.keyboard_arrow_right),
+                  //   onTap: () {
+                  //     print("Tag People Clicked........!");
+                  //   },
+                  // ),
                   ListTile(
                       title: new Text('Select Page'),
                       trailing: new Icon(Icons.keyboard_arrow_right),
