@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:post/components/ScheduleCard.dart';
 import 'package:post/utils/constants.dart';
 
@@ -12,14 +13,15 @@ class PastSchedule extends StatefulWidget {
 }
 
 class _PastScheduleState extends State<PastSchedule> {
-  CollectionReference users =
-      FirebaseFirestore.instance.collection('usersProfile');
+  CollectionReference users = FirebaseFirestore.instance.collection('posts');
   User? user = FirebaseAuth.instance.currentUser;
   late Query query;
 
   @override
   void initState() {
-    Query profiles = users.where("accountId", isEqualTo: user!.uid);
+    Query profiles = users
+        //.where("userId", isEqualTo: user!.uid)
+        .where("dateTime", isLessThan: DateTime.now());
     query = profiles;
     super.initState();
   }
@@ -57,12 +59,14 @@ class _PastScheduleState extends State<PastSchedule> {
                 children: snapshot.data!.docs.map((DocumentSnapshot document) {
                   Map<String, dynamic> data =
                       document.data() as Map<String, dynamic>;
-                  print("data");
-                  print(data);
+                  DateTime _timestamp = data['dateTime'].toDate();
+                  var d12 = DateFormat('dd/MM/yy').format(_timestamp);
+                  //print("data");
+                  //print(data);
                   return CardRow(
-                    src: "https://moodforcode.com/assets/images/moodforcode.jpg",
-                    time: "12.3.21",
-                    content: "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it",
+                    src: data["_uploadedFileURL"],
+                    time: d12.toString(),
+                    content: data["message"],
                     press: () {
                       print(data);
                     },

@@ -41,6 +41,9 @@ class NewSchedule extends StatefulWidget {
 class _NewScheduleState extends State<NewSchedule> {
   final myTextController = TextEditingController();
 
+  CollectionReference posts = FirebaseFirestore.instance.collection('posts');
+  late Query query;
+
   bool isSwitched = false;
   bool isSwitchedfb = false;
   bool isSwitchedtwitter = false;
@@ -192,16 +195,26 @@ class _NewScheduleState extends State<NewSchedule> {
       );
       final profile = jsonDecode(response.data);
       print(profile);
-      print(_uploadedFileURL);
-      Fluttertoast.showToast(
-          msg: 'Post sheduled Successfully!',
-          toastLength: Toast.LENGTH_SHORT,
-          gravity: ToastGravity.TOP,
-          timeInSecForIosWeb: 3,
-          backgroundColor: Colors.blueGrey,
-          textColor: Colors.white);
+      if (profile['id'] != null) {
+        Fluttertoast.showToast(
+            msg: 'Post sheduled Successfully!',
+            toastLength: Toast.LENGTH_SHORT,
+            gravity: ToastGravity.TOP,
+            timeInSecForIosWeb: 3,
+            backgroundColor: Colors.blueGrey,
+            textColor: Colors.white);
+        addPosts(userId, accountId, dateTime, name, pageId, _uploadedFileURL);
+      } else {
+        Fluttertoast.showToast(
+            msg: 'Something went wrong!',
+            toastLength: Toast.LENGTH_SHORT,
+            gravity: ToastGravity.TOP,
+            timeInSecForIosWeb: 3,
+            backgroundColor: Colors.blueGrey,
+            textColor: Colors.white);
+      }
+      //print(_uploadedFileURL);
 
-      ///addPosts(userId,accountId,dateTime,name,AD_ACCOUNT_ID,_uploadedFileURL);
     } on Exception catch (e) {
       print(e);
     }
@@ -209,6 +222,18 @@ class _NewScheduleState extends State<NewSchedule> {
     on dio.DioError {
       throw Exception('Failed to create Campaign.');
     }
+  }
+
+  void addPosts(
+      userId, accountId, dateTime, message, pageId, _uploadedFileURL) {
+    posts.add({
+      'userId': userId,
+      'accountId': accountId,
+      'dateTime': dateTime,
+      'message': message,
+      'pageId': pageId,
+      '_uploadedFileURL': _uploadedFileURL,
+    });
   }
 
   Future<void> getAllAvailablePages() async {
@@ -439,7 +464,15 @@ class _NewScheduleState extends State<NewSchedule> {
                         children: <Widget>[
                           new Text('Scheduled at'),
                           Text(
-                            selectedText == null ? "" : DateFormat.yMd().format(selectedText).toString() + " " + DateFormat.Hm().format(selectedText).toString(),
+                            selectedText == null
+                                ? ""
+                                : DateFormat.yMd()
+                                        .format(selectedText)
+                                        .toString() +
+                                    " " +
+                                    DateFormat.Hm()
+                                        .format(selectedText)
+                                        .toString(),
                             style: TextStyle(color: Colors.grey, fontSize: 14),
                           ),
                         ]),
