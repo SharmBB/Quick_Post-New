@@ -41,7 +41,7 @@ class _PastScheduleState extends State<PastSchedule> {
       body: SingleChildScrollView(
         child: Container(
           width: 500,
-          height: 500,
+          height: MediaQuery.of(context).size.height,
           child: StreamBuilder<QuerySnapshot>(
             stream: query.snapshots(),
             builder:
@@ -54,23 +54,32 @@ class _PastScheduleState extends State<PastSchedule> {
                 return Center(child: CircularProgressIndicator());
               }
 
-              return new ListView(
-                children: snapshot.data!.docs.map((DocumentSnapshot document) {
-                  Map<String, dynamic> data =
-                      document.data() as Map<String, dynamic>;
-                  DateTime _timestamp = data['dateTime'].toDate();
-                  var d12 = DateFormat('dd/MM/yy').format(_timestamp);
-                  //print("data");
-                  //print(data);
-                  return CardRow(
-                    src: data["_uploadedFileURL"],
-                    time: d12.toString(),
-                    content: data["message"],
-                    press: () {
-                      print(data);
-                    },
+              if (snapshot.data!.docs.length != 0) {
+                return new ListView(
+                    children: snapshot.data!.docs.map((DocumentSnapshot document) {
+                      Map<String, dynamic> data =
+                          document.data() as Map<String, dynamic>;
+                      DateTime _timestamp = data['dateTime'].toDate();
+                      var d12 = DateFormat('dd/MM/yy').format(_timestamp);
+
+                      return CardRow(
+                        src: data["_uploadedFileURL"],
+                        time: d12.toString(),
+                        content: data["message"],
+                        press: () {
+                          print(data);
+                        },
+                      );
+                    }).toList(),
                   );
-                }).toList(),
+              }
+              return Padding(
+                padding: const EdgeInsets.only(top: 300),
+                child: Column(
+                  children: [
+                    Text("No data available"),
+                  ],
+                ),
               );
             },
           ),

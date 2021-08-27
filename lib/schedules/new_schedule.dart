@@ -11,6 +11,7 @@ import 'package:post/home/home.dart';
 import 'package:post/schedules/scheduler/calendar.dart';
 import 'package:post/utils/constants.dart';
 import 'package:flutter/material.dart';
+import 'package:post/utils/helper.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
@@ -53,6 +54,7 @@ class _NewScheduleState extends State<NewSchedule> {
   String pageId = "";
   String pageToken = "";
   var _currentIndex = 1;
+  bool _isLoading = false;
 
   @override
   void dispose() {
@@ -150,6 +152,9 @@ class _NewScheduleState extends State<NewSchedule> {
   }
 
   Future<void> createCampaign(String name) async {
+  setState(() {
+    _isLoading = true;
+  });
     try {
       //await uploadFile();
 
@@ -250,6 +255,17 @@ class _NewScheduleState extends State<NewSchedule> {
     on dio.DioError {
       throw Exception('Failed to create Campaign.');
     }
+    setState(() {
+    _isLoading = false;
+    });
+    Fluttertoast.showToast(
+          msg: 'Posted Sucessfully',
+          toastLength: Toast.LENGTH_SHORT,
+          gravity: ToastGravity.TOP,
+          timeInSecForIosWeb: 3,
+          backgroundColor: Colors.blueGrey,
+          textColor: Colors.white);
+      pushReplacement(context, Home());
   }
 
   void addPosts(
@@ -335,10 +351,10 @@ class _NewScheduleState extends State<NewSchedule> {
                 //createCampaign
                 print(myTextController.text);
               },
-              child: Text(
+              child: _isLoading ? CupertinoActivityIndicator() :  Text(
                 "Post",
                 style: TextStyle(color: Colors.blue, fontSize: 18),
-              ),
+              ) ,
             ),
           ),
           SizedBox(

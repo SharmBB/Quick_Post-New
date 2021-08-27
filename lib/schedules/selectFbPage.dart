@@ -215,6 +215,7 @@ class _SelectFbPageState extends State<SelectFbPage> {
                     return Center(child: CircularProgressIndicator());
                   }
 
+                  if (snapshot.data!.docs.length != 0) {
                   return ListView.builder(
                     shrinkWrap: true,
                     physics: ScrollPhysics(),
@@ -263,6 +264,17 @@ class _SelectFbPageState extends State<SelectFbPage> {
                         ),
                       );
                     },
+                  );
+                  }
+                  return Center(
+                    child: Padding(
+                      padding: const EdgeInsets.only(top: 300),
+                      child: Column(
+                          children: [
+                            Text("No profile available"),
+                          ],
+                      ),
+                    ),
                   );
                 },
               ),
