@@ -1,7 +1,12 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
+import 'package:post/sign_in/signin.dart';
 
 import 'package:post/utils/constants.dart';
+import 'package:post/utils/helper.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class Forget extends StatefulWidget {
   Forget({Key? key, required this.title}) : super(key: key);
@@ -20,7 +25,7 @@ class _ForgetState extends State<Forget> {
   TextEditingController _emailController = new TextEditingController();
 
   String? email;
-
+  bool _isLoading = false;
   @override
   void initState() {
     // TODO: implement initState
@@ -31,16 +36,6 @@ class _ForgetState extends State<Forget> {
   void dispose() {
     // TODO: implement dispose
     super.dispose();
-  }
-
-  void _submit() {
-    final form = formKey.currentState;
-
-    if (form!.validate()) {
-      form.save();
-
-      performLogin();
-    }
   }
 
   void performLogin() {
@@ -148,9 +143,9 @@ class _ForgetState extends State<Forget> {
                               crossAxisAlignment: CrossAxisAlignment.center,
                               children: [
                                 FlatButton(
-                                  onPressed: () {
-                                    _submit();
-                                  },
+                                  onPressed: () async {
+                                      await onClick();
+                                    },
                                   textColor: Colors.white,
                                   padding: const EdgeInsets.all(0.0),
                                   shape: CircleBorder(
@@ -214,7 +209,7 @@ class _ForgetState extends State<Forget> {
       keyboardType: TextInputType.emailAddress,
       validator: (value) {
         if (value!.length == 0) {
-          return 'Email required';
+          return 'Email Required';
         } else if (!regex.hasMatch(value)) {
           return 'Enter Valid Email';
         } else {
@@ -227,4 +222,87 @@ class _ForgetState extends State<Forget> {
       controller: _emailController,
     );
   }
+
+      onClick() async {
+    if (formKey.currentState!.validate()) {
+      // formKey.currentState!.save();
+      // showProgress(context, 'Logging in, please wait...', false);
+      print("Logging in");
+      //await resetPassword(email.trim());
+    
+      await _signInWithEmailAndPassword();
+      // SharedPreferences prefs = await SharedPreferences.getInstance();
+      // prefs.setString('userId', user.uid);
+      // print(prefs.setString('userId', user.uid));
+      // getUserAccounts(user.userID);
+      // if (user != null) pushAndRemoveUntil(context, Home(), false);
+    } 
+    else {
+      print("validate");
+    }
+  }
+
+  _signInWithEmailAndPassword() async {
+  var errorMessage;
+  SharedPreferences prefs = await SharedPreferences.getInstance();
+  
+  setState(() {
+    _isLoading = true;
+  });
+  try {
+    // final userCredential = (await FirebaseAuth.instance.signInWithEmailAndPassword(
+    //   email: _emailController.text.trim(),
+    // )).user;
+    // if(userCredential != null ){
+    //   if(userCredential.emailVerified == true){
+    //     User? user = FirebaseAuth.instance.currentUser;
+    //     errorMessage = 'Successfully logged In!.';
+    //     prefs.setString('userId', user!.uid);
+    //     pushAndRemoveUntil(context, Home(), false);
+    //     // print(user!.uid);
+    //   } else {
+    //     errorMessage = 'Please verify your email!';
+    //   }
+    // }
+    await FirebaseAuth.instance.sendPasswordResetEmail(email: _emailController.text.trim());
+    errorMessage = 'Email sended successfully';
+    pushAndRemoveUntil(context, Signin(), false);
+
+  } on FirebaseAuthException catch (e) {
+    if (e.code == 'user-not-found') {
+      errorMessage = 'No user found for that email.';
+    } else if (e.code == 'wrong-password') {
+      errorMessage = 'Wrong password provided for that user.';
+    } else if (e.code == 'email-already-in-use') {
+      errorMessage = 'Email already used.';
+    } else if (e.code == 'account-exists-with-different-credential') {
+      errorMessage = 'Email already used.';
+    } else if (e.code == 'user-disabled') {
+      errorMessage = 'User disabled.';
+    } else if (e.code == 'operation-not-allowed') {
+      errorMessage = 'Too many requests to log into this account.';
+    } else if (e.code == 'invalid-email') {
+      errorMessage = 'Email address is invalid.';
+    } else {
+      errorMessage = 'Login failed. Please try again.';
+    }
+    // toastMessage(errorMessage);
+  }
+  toastMessage(errorMessage);
+  setState(() {
+      _isLoading = false;
+    });
+}
+
+void toastMessage(String message) {
+  Fluttertoast.showToast(
+      msg: message,
+      toastLength: Toast.LENGTH_SHORT,
+      gravity: ToastGravity.TOP,
+      timeInSecForIosWeb: 1,
+      fontSize: 16.0);
+  print(message);
+}
+
+  
 }

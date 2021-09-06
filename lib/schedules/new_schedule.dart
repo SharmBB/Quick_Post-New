@@ -167,6 +167,9 @@ class _NewScheduleState extends State<NewSchedule> {
             timeInSecForIosWeb: 3,
             backgroundColor: Colors.blueGrey,
             textColor: Colors.white);
+              setState(() {
+                _isLoading = false;
+              });
         return;
       }
       _uploadedFileURL = await fileurl;
@@ -183,12 +186,15 @@ class _NewScheduleState extends State<NewSchedule> {
 
       if (selectedTime.length < 5) {
         Fluttertoast.showToast(
-            msg: 'Please the date & time',
+            msg: 'Please the Date & Time',
             toastLength: Toast.LENGTH_SHORT,
             gravity: ToastGravity.TOP,
             timeInSecForIosWeb: 3,
             backgroundColor: Colors.blueGrey,
             textColor: Colors.white);
+            setState(() {
+                _isLoading = false;
+              });
         return;
       }
       String finalDateTime = selectedTime.substring(0, 19);
@@ -209,6 +215,9 @@ class _NewScheduleState extends State<NewSchedule> {
             timeInSecForIosWeb: 3,
             backgroundColor: Colors.blueGrey,
             textColor: Colors.white);
+            setState(() {
+                _isLoading = false;
+              });
         return;
       }
 

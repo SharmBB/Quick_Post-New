@@ -247,13 +247,13 @@ class _MyHomePageState extends State<SignIn_body> {
                     height: 40,
                   ),
                
-                 RaisedButton(onPressed: () async {
-                   SharedPreferences prefs = await SharedPreferences.getInstance();
-                  //  prefs.setString('userId', user!.uid);
-                   print(prefs.getString('userId'));
-                  //  push(context, Signup());
-                  //  print(user!.uid);
-                 }, child: Text("data"),),
+                //  RaisedButton(onPressed: () async {
+                //    SharedPreferences prefs = await SharedPreferences.getInstance();
+                //   //  prefs.setString('userId', user!.uid);
+                //    print(prefs.getString('userId'));
+                //   //  push(context, Signup());
+                //   //  print(user!.uid);
+                //  }, child: Text("data"),),
                   Container(
                     alignment: Alignment.topCenter,
                     child: Row(
